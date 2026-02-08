@@ -1,0 +1,32 @@
+@if (show) {
+  <div class="modal-overlay active" (click)="closeModal()">
+    <div class="modal-error" (click)="stopPropagation($event)">
+      <div class="modal-header">
+        <div class="error-icon-container">
+          <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <h2 class="modal-title">{{ title }}</h2>
+        <button class="btn-close" (click)="closeModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <p class="error-text">{{ message }}</p>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn-primary" (click)="closeModal()">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+}

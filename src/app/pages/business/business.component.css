@@ -1,0 +1,389 @@
+.businesses-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f7;
+
+  :host-context(.dark) & {
+    background-color: #0a0a0a;
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  width: 16rem;
+  background-color: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: block;
+  }
+
+  :host-context(.dark) & {
+    background-color: #111827;
+    border-right-color: #1f2937;
+  }
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.sidebar-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Brand Section */
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background-color: #1f2937;
+  flex-shrink: 0;
+
+  :host-context(.dark) & {
+    background-color: #374151;
+  }
+}
+
+.brand-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.brand-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+
+  :host-context(.dark) & {
+    color: white;
+  }
+}
+
+.brand-type {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+
+  :host-context(.dark) & {
+    color: #9ca3af;
+  }
+}
+
+/* Navigation */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  color: #374151;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+
+  &.active {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+
+  :host-context(.dark) & {
+    color: #d1d5db;
+
+    &:hover {
+      background-color: #1f2937;
+    }
+
+    &.active {
+      background-color: #1e3a8a;
+      color: #93c5fd;
+    }
+  }
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+}
+
+.nav-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+
+  :host-context(.dark) & {
+    border-top-color: #1f2937;
+  }
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+
+  @media (min-width: 768px) {
+    padding: 3rem;
+  }
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+
+  @media (min-width: 768px) {
+    font-size: 2.25rem;
+  }
+
+  :host-context(.dark) & {
+    color: white;
+  }
+}
+
+.page-subtitle {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  margin: 0;
+
+  :host-context(.dark) & {
+    color: #9ca3af;
+  }
+}
+
+.btn-create {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #2563eb;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1.25rem;
+  }
+}
+
+/* Business Grid */
+.business-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Business Card */
+.business-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+
+  :host-context(.dark) & {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+}
+
+.business-image {
+  width: 100%;
+  height: 12rem;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.business-info {
+  padding: 1rem;
+}
+
+.business-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+
+  :host-context(.dark) & {
+    color: white;
+  }
+}
+
+.business-status {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+
+  &.status-active {
+    color: #3b82f6;
+  }
+
+  &.status-complete {
+    color: #10b981;
+  }
+
+  &.status-reviews {
+    color: #f59e0b;
+  }
+
+  &.status-inactive {
+    color: #6b7280;
+  }
+
+  :host-context(.dark) & {
+    &.status-active {
+      color: #60a5fa;
+    }
+
+    &.status-complete {
+      color: #34d399;
+    }
+
+    &.status-reviews {
+      color: #fbbf24;
+    }
+
+    &.status-inactive {
+      color: #9ca3af;
+    }
+  }
+}
+
+/* Business Actions */
+.business-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem 1rem;
+}
+
+.btn-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
+}
+
+.btn-edit {
+  background-color: #f3f4f6;
+  color: #374151;
+
+  &:hover {
+    background-color: #e5e7eb;
+  }
+
+  :host-context(.dark) & {
+    background-color: #374151;
+    color: #d1d5db;
+
+    &:hover {
+      background-color: #4b5563;
+    }
+  }
+}
+
+.btn-delete {
+  background-color: #f3f4f6;
+  color: #374151;
+
+  &:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
+  }
+
+  :host-context(.dark) & {
+    background-color: #374151;
+    color: #d1d5db;
+
+    &:hover {
+      background-color: #7f1d1d;
+      color: #fca5a5;
+    }
+  }
+}

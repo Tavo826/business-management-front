@@ -1,0 +1,99 @@
+<div class="profile-container">
+  <div class="profile-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <p class="page-title">My Profile</p>
+    </div>
+
+    <!-- Profile Picture Section -->
+    <div class="profile-picture-card">
+      <div class="picture-content">
+        <div class="picture-section">
+          <div class="avatar"></div>
+          <div class="picture-info">
+            <p class="picture-title">Profile Picture</p>
+            <p class="picture-subtitle">PNG or JPG. Max 5MB.</p>
+          </div>
+        </div>
+        <div class="picture-actions">
+          <button class="btn-upload">
+            <span class="truncate">Upload</span>
+          </button>
+          <button class="btn-remove">
+            <span class="truncate">Remove</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information Section -->
+    <div class="info-card">
+      <h2 class="section-title">Personal Information</h2>
+      <form class="profile-form" (submit)="onSubmit($event)">
+        <div class="form-field full-width">
+          <label class="field-label" for="fullName">Full Name</label>
+          <input 
+            class="form-input" 
+            id="fullName" 
+            type="text" 
+            [(ngModel)]="fullName"
+            name="fullName" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="email">Email Address</label>
+          <input 
+            class="form-input" 
+            id="email" 
+            type="email" 
+            [(ngModel)]="email"
+            name="email" />
+        </div>
+
+        <div class="form-field password-field">
+          <label class="field-label" for="password">Password</label>
+          <div class="password-wrapper">
+            <input 
+              class="form-input" 
+              id="password" 
+              [type]="showPassword() ? 'text' : 'password'" 
+              [(ngModel)]="password"
+              name="password" />
+            <button 
+              class="toggle-visibility" 
+              type="button"
+              (click)="togglePasswordVisibility()">
+              <span class="material-symbols-outlined">
+                {{ showPassword() ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-save" type="submit">
+            <span class="truncate">Save Changes</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Danger Zone Section -->
+    <div class="danger-zone">
+      <h2 class="danger-title">Danger Zone</h2>
+      <div class="danger-card">
+        <div class="danger-content">
+          <div class="danger-info">
+            <h3 class="danger-heading">Delete Account</h3>
+            <p class="danger-description">
+              Permanently remove your account and all of its content. This action is not reversible.
+            </p>
+          </div>
+          <button class="btn-delete">
+            <span class="truncate">Delete Account</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

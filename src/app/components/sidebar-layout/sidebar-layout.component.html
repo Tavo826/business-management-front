@@ -1,0 +1,81 @@
+<div class="layout-container">
+  <div class="layout-wrapper">
+    <!-- SideNavBar -->
+    <aside class="sidebar">
+      <div class="sidebar-content">
+        <div class="sidebar-main">
+          <!-- Brand Header -->
+          <div class="brand-section">
+            <div class="brand-avatar"></div>
+            <div class="brand-info">
+              <h1 class="brand-name">Innovate Inc.</h1>
+              <p class="brand-type">Personal Account</p>
+            </div>
+          </div>
+
+          <!-- Navigation -->
+          <nav class="nav-menu">
+            <a 
+              routerLink="/app/dashboard" 
+              routerLinkActive="active" 
+              [routerLinkActiveOptions]="{exact: true}" 
+              class="nav-item">
+              <span class="material-symbols-outlined nav-icon">dashboard</span>
+              <p class="nav-label">Dashboard</p>
+            </a>
+            <a 
+              routerLink="/businesses"
+              class="nav-item">
+              <span class="material-symbols-outlined nav-icon">business_center</span>
+              <p class="nav-label">Businesses</p>
+            </a>
+            <a 
+              routerLink="/orders" 
+              class="nav-item">
+              <span class="material-symbols-outlined nav-icon">shopping_cart</span>
+              <p class="nav-label">Orders</p>
+            </a>
+            <a 
+              routerLink="/app/profile" 
+              routerLinkActive="active" 
+              class="nav-item">
+              <span class="material-symbols-outlined nav-icon">person</span>
+              <p class="nav-label">Profile</p>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="sidebar-footer">
+          <a href="#" class="nav-item">
+            <span class="material-symbols-outlined nav-icon">settings</span>
+            <p class="nav-label">Settings</p>
+          </a>
+          <a routerLink="/login" class="nav-item">
+            <span class="material-symbols-outlined nav-icon">logout</span>
+            <p class="nav-label">Log out</p>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Mobile Header -->
+      <header class="mobile-header">
+        <div class="mobile-brand">
+          <span class="material-symbols-outlined mobile-icon">business_center</span>
+          <span class="mobile-name">Innovate Inc.</span>
+        </div>
+        <button class="mobile-menu-btn">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

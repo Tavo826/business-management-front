@@ -1,0 +1,234 @@
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-main">
+        <!-- User Profile -->
+        <div class="user-profile">
+          <div 
+            class="user-avatar"
+            [style.background-image]="'url(' + currentUser().avatar + ')'">
+          </div>
+          <div class="user-info">
+            <h1 class="user-name">{{ currentUser().name }}</h1>
+            <p class="user-role">{{ currentUser().role }}</p>
+          </div>
+        </div>
+
+        <!-- Business Selector -->
+        <div class="business-selector-wrapper">
+          <label class="selector-label">Active Business</label>
+          <button class="business-selector">
+            <div class="selector-content">
+              <div class="business-icon">
+                <span class="material-symbols-outlined">storefront</span>
+              </div>
+              <span class="business-name">Innovate Solutions</span>
+            </div>
+            <span class="material-symbols-outlined selector-arrow">unfold_more</span>
+          </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="nav-menu">
+          <a href="#" class="nav-item active">
+            <span class="material-symbols-outlined nav-icon">dashboard</span>
+            <p class="nav-label">Dashboard</p>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="material-symbols-outlined nav-icon">shopping_cart</span>
+            <p class="nav-label">Orders</p>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="material-symbols-outlined nav-icon">group</span>
+            <p class="nav-label">Clients</p>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="material-symbols-outlined nav-icon">person</span>
+            <p class="nav-label">Profile</p>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="sidebar-footer">
+        <a href="#" class="nav-item">
+          <span class="material-symbols-outlined nav-icon">settings</span>
+          <p class="nav-label">Settings</p>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="material-symbols-outlined nav-icon">logout</span>
+          <p class="nav-label">Log out</p>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="header-info">
+          <div class="business-badge">
+            <span class="badge">Active Business</span>
+          </div>
+          <h2 class="business-title">Innovate Solutions Inc.</h2>
+          <p class="business-subtitle">Dashboard overview for the last 30 days.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary">
+            <span class="material-symbols-outlined">calendar_today</span>
+            <span>Oct 1 - Oct 31, 2023</span>
+          </button>
+          <button class="btn-primary">
+            <span class="material-symbols-outlined">file_download</span>
+            <span>Export Data</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Metrics Grid -->
+      <div class="metrics-grid">
+        @for (metric of metrics(); track metric.title) {
+          <div class="metric-card">
+            <div class="metric-header">
+              <div 
+                class="metric-icon"
+                [class]="getMetricBgClass(metric.colorClass)">
+                <span class="material-symbols-outlined">{{ metric.icon }}</span>
+              </div>
+              <span 
+                class="metric-change"
+                [class.positive]="metric.isPositive"
+                [class.negative]="!metric.isPositive">
+                {{ metric.change }}
+              </span>
+            </div>
+            <p class="metric-title">{{ metric.title }}</p>
+            <p class="metric-value">{{ metric.value }}</p>
+          </div>
+        }
+      </div>
+
+      <!-- Charts & Insights Grid -->
+      <div class="charts-grid">
+        <!-- Order History Trends -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Order History Trends</h3>
+            <select class="chart-select">
+              <option>Weekly</option>
+              <option selected>Monthly</option>
+              <option>Yearly</option>
+            </select>
+          </div>
+          <div class="bar-chart">
+            @for (bar of chartData(); track bar.month) {
+              <div class="bar-container">
+                <div 
+                  class="bar"
+                  [style.height.%]="bar.heightPercentage">
+                  <div class="bar-fill"></div>
+                </div>
+                <span class="bar-label">{{ bar.month }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Client Insights -->
+        <div class="insights-card">
+          <div class="insights-header">
+            <h3 class="insights-title">Client Insights</h3>
+            <button class="view-all-btn">View All</button>
+          </div>
+          <div class="insights-content">
+            <!-- Progress Bar -->
+            <div class="progress-section">
+              <div class="progress-header">
+                <span class="progress-label">New vs Returning Customers</span>
+                <span class="progress-value">65% Returning</span>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill returning"></div>
+                <div class="progress-bar-fill new"></div>
+              </div>
+            </div>
+
+            <!-- Top Clients List -->
+            <div class="clients-section">
+              <h4 class="clients-label">Top Clients</h4>
+              <div class="clients-list">
+                @for (client of topClients(); track client.name) {
+                  <div class="client-item">
+                    <div class="client-info">
+                      <div class="client-avatar">
+                        <span class="client-initials">{{ client.initials }}</span>
+                      </div>
+                      <div class="client-details">
+                        <p class="client-name">{{ client.name }}</p>
+                        <p class="client-detail">{{ client.detail }}</p>
+                      </div>
+                    </div>
+                    <p class="client-amount">{{ client.amount }}</p>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders Table -->
+      <div class="orders-table-container">
+        <div class="table-header">
+          <h3 class="table-title">Recent Orders</h3>
+          <div class="table-search">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input 
+              type="text" 
+              placeholder="Search orders..." 
+              class="search-input"/>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (order of recentOrders(); track order.id) {
+                <tr>
+                  <td class="order-id">{{ order.id }}</td>
+                  <td>{{ order.client }}</td>
+                  <td class="order-date">{{ order.date }}</td>
+                  <td>
+                    <span 
+                      class="status-badge"
+                      [class]="getStatusClasses(order.status)">
+                      {{ order.status }}
+                    </span>
+                  </td>
+                  <td class="order-amount">{{ order.amount }}</td>
+                  <td class="order-actions">
+                    <button class="action-btn">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

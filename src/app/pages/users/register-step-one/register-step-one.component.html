@@ -1,0 +1,256 @@
+<div class="register-container">
+  <header class="header">
+    <div class="header-brand">
+      <div class="logo">
+        <span class="material-symbols-outlined">business_center</span>
+      </div>
+      <h2 class="brand-title">BizManager</h2>
+    </div>
+    <div class="header-nav">
+      <div class="nav-links">
+        <a class="nav-link">Inicio</a>
+        <a class="nav-link">Sobre nosotros</a>
+        <a class="nav-link">Soporte</a>
+      </div>
+      <button routerLink="/home" class="btn-login">
+        <span class="truncate">Iniciar Sesión</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="content-wrapper">
+      <div class="page-header">
+        <div class="header-text">
+          <h1 class="page-title">Crea tu cuenta</h1>
+          <p class="page-subtitle">Empieza por ingresar tus datos personales para comenzar el registro.</p>
+        </div>
+        <div class="stepper">
+          <div class="step">
+            <div class="step-number active">1</div>
+            <span class="step-label active">Persona</span>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <span class="step-label">Negocio</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="card-content">
+          <div class="section-header">
+            <div class="section-icon">
+              <span class="material-symbols-outlined">person</span>
+            </div>
+            <h3 class="section-title">Información Personal</h3>
+          </div>
+
+          <form (submit)="continueRegistration()" [formGroup]="registrationFormOne">
+
+            <div class="form-grid">
+              <!-- Campo Nombres -->
+              <div class="form-field-wrapper">
+                <label class="form-field" for="Nombres">
+                  <span class="field-label">Nombres <span class="requiredStar">*</span></span>
+                  <input class="form-input" 
+                         placeholder="Ingrese nombre" 
+                         id="Nombres"
+                         [formControl]="registrationFormOne.controls.name"/>
+                </label>
+                <div *ngIf="registrationFormOne.controls.name.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!registrationFormOne.controls.name.errors['required']">
+                    Nombre es requerido
+                  </div>
+                  <div [hidden]="!registrationFormOne.controls.name.errors['minlength']">
+                    Nombre debe tener al menos 3 caracteres
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Apellidos -->
+              <div class="form-field-wrapper">
+                <label class="form-field" for="Apellidos">
+                  <span class="field-label">Apellidos <span class="requiredStar">*</span></span>
+                  <input class="form-input" 
+                         placeholder="Ingrese apellidos" 
+                         id="Apellidos"
+                         [formControl]="registrationFormOne.controls.surname"/>
+                </label>
+                <div *ngIf="registrationFormOne.controls.surname.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!registrationFormOne.controls.surname.errors['required']">
+                    Apellidos es requerido
+                  </div>
+                  <div [hidden]="!registrationFormOne.controls.surname.errors['minlength']">
+                    Apellidos debe tener al menos 3 caracteres
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Tipo de Documento -->
+              <div class="form-field-wrapper">
+                <label class="form-field" for="TipoDocumento">
+                  <span class="field-label">Tipo de Documento <span class="requiredStar">*</span></span>
+                  <div class="select-wrapper">
+                    <select class="form-select" 
+                            id="TipoDocumento"
+                            [formControl]="registrationFormOne.controls.documentType">
+                      <option disabled selected value="">Seleccione</option>
+                      <option value="id">Cédula</option>
+                      <option value="passport">Pasaporte</option>
+                    </select>
+                    <span class="material-symbols-outlined select-icon">expand_more</span>
+                  </div>
+                </label>
+                <div *ngIf="registrationFormOne.controls.documentType.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!registrationFormOne.controls.documentType.errors['required']">
+                    Tipo de documento es requerido
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Número de Documento -->
+              <div class="form-field-wrapper">
+                <label class="form-field" for="NumeroDocumento">
+                  <span class="field-label">Número de Documento <span class="requiredStar">*</span></span>
+                  <input class="form-input" 
+                         placeholder="Ingrese número de documento" 
+                         id="NumeroDocumento"
+                         [formControl]="registrationFormOne.controls.documentNumber"/>
+                </label>
+                <div *ngIf="registrationFormOne.controls.documentNumber.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!registrationFormOne.controls.documentNumber.errors['required']">
+                    Número de documento es requerido
+                  </div>
+                  <div [hidden]="!registrationFormOne.controls.documentNumber.errors['minlength']">
+                    Número de documento debe tener al menos 8 caracteres
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Fecha de Nacimiento -->
+              <div class="form-field-wrapper">
+                <label class="form-field" for="FechaNacimiento">
+                  <span class="field-label">Fecha de Nacimiento <span class="requiredStar">*</span></span>
+                  <input class="form-input" 
+                         placeholder="YYYY-MM-DD" 
+                         type="date" 
+                         id="FechaNacimiento"
+                         [formControl]="registrationFormOne.controls.birthdate"/>
+                </label>
+                <div *ngIf="registrationFormOne.controls.birthdate.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!registrationFormOne.controls.birthdate.errors['required']">
+                    Fecha de nacimiento es requerida
+                  </div>
+                  <div [hidden]="!registrationFormOne.controls.birthdate.errors['invalidDate']">
+                    Fecha de nacimiento debe ser válida
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Correo Electrónico -->
+              <div class="form-field-wrapper full-width">
+                <label class="form-field" for="CorreoElectronico">
+                  <span class="field-label">Correo Electrónico <span class="requiredStar">*</span></span>
+                  <input class="form-input" 
+                         placeholder="john.doe@example.com" 
+                         type="email" 
+                         id="CorreoElectronico"
+                         [formControl]="registrationFormOne.controls.email"/>
+                </label>
+                <div *ngIf="registrationFormOne.controls.email.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!registrationFormOne.controls.email.errors['required']">
+                    Correo electrónico es requerido
+                  </div>
+                  <div [hidden]="!registrationFormOne.controls.email.errors['email']">
+                    Correo electrónico debe ser válido
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Contraseña -->
+              <div class="form-field-wrapper full-width">
+                <label class="form-field" for="Contrasena">
+                  <span class="field-label">Contraseña <span class="requiredStar">*</span></span>
+                  <div class="password-wrapper">
+                    <input class="form-input" 
+                           placeholder="Crea una contraseña segura" 
+                           type="password" 
+                           id="Contrasena"
+                           [formControl]="registrationFormOne.controls.password"/>
+                    <button class="toggle-password" type="button">
+                      <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                  </div>
+                  <span class="field-hint">Debe tener al menos 8 caracteres con números y símbolos.</span>
+                </label>
+                <div *ngIf="registrationFormOne.controls.password.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!registrationFormOne.controls.password.errors['required']">
+                    Contraseña es requerida
+                  </div>
+                  <div [hidden]="!registrationFormOne.controls.password.errors['minlength']">
+                    Contraseña debe tener al menos 8 caracteres
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campo Confirmar Contraseña -->
+              <div class="form-field-wrapper full-width">
+                <label class="form-field" for="ConfirmarContrasena">
+                  <span class="field-label">Confirmar Contraseña <span class="requiredStar">*</span></span>
+                  <div class="password-wrapper">
+                    <input class="form-input" 
+                           placeholder="Confirma tu contraseña" 
+                           type="password" 
+                           id="ConfirmarContrasena"
+                           [formControl]="registrationFormOne.controls.confirmPassword"/>
+                    <button class="toggle-password" type="button">
+                      <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                  </div>
+                </label>
+                <div *ngIf="registrationFormOne.controls.confirmPassword.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!registrationFormOne.controls.confirmPassword.errors['required']">
+                    Confirmación de contraseña es requerida
+                  </div>
+                  <div [hidden]="!registrationFormOne.controls.confirmPassword.errors['minlength']">
+                    Confirmación de contraseña debe tener al menos 8 caracteres
+                  </div>
+                  <div [hidden]="!registrationFormOne.controls.confirmPassword.errors['passwordMismatch']">
+                    Las contraseñas no coinciden
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+
+        <div class="card-footer">
+          <button routerLink="/home" class="btn-secondary">
+            Cancelar
+          </button>
+          <button routerLink="/register/step-2" class="btn-primary">
+            <span>Siguiente: Info Negocio</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="footer-text">
+        <p class="footer-message">
+          ¿Ya tienes una cuenta? <a routerLink="/login" class="link-primary">Iniciar sesión</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</div>

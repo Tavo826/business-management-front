@@ -1,0 +1,222 @@
+.layout-container {
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.layout-wrapper {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  display: none;
+  flex-direction: column;
+  border-right: 1px solid #e5e7eb;
+  background-color: white;
+  width: 16rem;
+  padding: 1rem;
+  flex-shrink: 0;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+
+  :host-context(.dark) & {
+    border-right-color: #1f2937;
+    background-color: #0a0a0a;
+  }
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.sidebar-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Brand Section */
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.5rem;
+}
+
+.brand-avatar {
+  background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC0He-2hNB4oQn7jpu-WiwDWOuntTKdBpH6IAvkxDYDhc8hfQVU6J-uc5S-uZxC8qQOO77Go28KFOwPCJDdsHbs6mv2w0YjpBe9s4JXDRnUPNZoZYsrCU8s4lw1gIH9CKEA7XYAhyB94Cn_3YjZ0KOgLmAr4PUESxRz0Xu3-qhU31wlHrxOCAy32S2-Zl_7WIe5YEEp2SxuXzt_0a0_joARpf_RsVvmkmtBH7xvIkOcXgcR3o4BvkxX7iCb7Ux7taFgB-iUuiEqsA02");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+
+  :host-context(.dark) & {
+    color: #f3f4f6;
+  }
+}
+
+.brand-type {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+
+  :host-context(.dark) & {
+    color: #9ca3af;
+  }
+}
+
+/* Navigation */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  color: #4b5563;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #f3f4f6;
+
+    :host-context(.dark) & {
+      background-color: #1f2937;
+    }
+  }
+
+  &.active {
+    background-color: rgba(30, 136, 229, 0.1);
+    color: #1e88e5;
+
+    :host-context(.dark) & {
+      background-color: rgba(30, 136, 229, 0.2);
+    }
+  }
+
+  :host-context(.dark) & {
+    color: #d1d5db;
+  }
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+}
+
+.nav-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Mobile Header */
+.mobile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
+
+  :host-context(.dark) & {
+    background-color: #0a0a0a;
+    border-bottom-color: #1f2937;
+  }
+}
+
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mobile-icon {
+  color: #1e88e5;
+}
+
+.mobile-name {
+  font-weight: 700;
+  color: #111827;
+
+  :host-context(.dark) & {
+    color: white;
+  }
+}
+
+.mobile-menu-btn {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4b5563;
+
+  &:hover {
+    color: #111827;
+  }
+
+  :host-context(.dark) & {
+    color: #9ca3af;
+
+    &:hover {
+      color: white;
+    }
+  }
+}
+
+/* Content Area */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+}
