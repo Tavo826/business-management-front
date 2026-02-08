@@ -12,6 +12,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
     },
     {
+        path: 'privacy-policy',
+        loadComponent: () => import('./pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+    },
+    {
         path: 'register',
         children: [
             { path: '', redirectTo: 'step-1', pathMatch: 'full' },
