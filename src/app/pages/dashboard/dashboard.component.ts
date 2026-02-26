@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, OnInit } from '@angular/core';
 import { inject } from '@angular/core';
 import { DataService } from '../../services/data.service';
 import { CommonModule } from '@angular/common';
@@ -46,7 +46,18 @@ interface Order {
   styleUrl: './dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent {
+
+
+
+export class DashboardComponent implements OnInit {
+
+  isLoading = signal<boolean>(true);
+
+  ngOnInit() {
+    setTimeout(() => {
+      this.isLoading.set(false);
+    }, 1500);
+  }
 
   currentUser = signal<User>({
     name: 'Innovate Inc.',

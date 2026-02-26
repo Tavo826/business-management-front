@@ -5,6 +5,7 @@
   width: 100%;
   flex-direction: column;
   overflow-x: hidden;
+  background-color: var(--bg-color);
 }
 
 .layout-wrapper {
@@ -17,19 +18,16 @@
 .sidebar {
   display: none;
   flex-direction: column;
-  border-right: 1px solid #e5e7eb;
-  background-color: white;
-  width: 16rem;
-  padding: 1rem;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--surface-color);
+  width: 17rem;
+  padding: 1.25rem 1rem;
   flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
 
   @media (min-width: 1024px) {
     display: flex;
-  }
-
-  :host-context(.dark) & {
-    border-right-color: #1f2937;
-    background-color: #0a0a0a;
   }
 }
 
@@ -43,7 +41,7 @@
 .sidebar-main {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
 }
 
 /* Brand Section */
@@ -60,9 +58,10 @@
   background-repeat: no-repeat;
   background-size: cover;
   aspect-ratio: 1;
-  border-radius: 9999px;
-  width: 2.5rem;
-  height: 2.5rem;
+  border-radius: var(--radius-full);
+  width: 2.75rem;
+  height: 2.75rem;
+  box-shadow: 0 0 0 2px var(--surface-color), 0 0 0 4px var(--primary-light);
 }
 
 .brand-info {
@@ -71,25 +70,17 @@
 }
 
 .brand-name {
-  color: #111827;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1.5;
-
-  :host-context(.dark) & {
-    color: #f3f4f6;
-  }
+  color: var(--text-main);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .brand-type {
-  color: #6b7280;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.5;
-
-  :host-context(.dark) & {
-    color: #9ca3af;
-  }
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 0.15rem;
 }
 
 /* Navigation */
@@ -103,42 +94,38 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  color: #4b5563;
-  transition: all 0.2s;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
   cursor: pointer;
   text-decoration: none;
+  font-weight: 500;
 
   &:hover {
-    background-color: #f3f4f6;
-
-    :host-context(.dark) & {
-      background-color: #1f2937;
-    }
+    background-color: var(--surface-hover);
+    color: var(--text-main);
+    transform: translateX(2px);
   }
 
   &.active {
-    background-color: rgba(30, 136, 229, 0.1);
-    color: #1e88e5;
-
-    :host-context(.dark) & {
-      background-color: rgba(30, 136, 229, 0.2);
-    }
-  }
-
-  :host-context(.dark) & {
-    color: #d1d5db;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
   }
 }
 
 .nav-icon {
   font-size: 1.25rem;
+  transition: transform var(--transition-fast);
+}
+
+.nav-item:hover .nav-icon {
+  transform: scale(1.1);
 }
 
 .nav-label {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.9rem;
   line-height: 1.5;
 }
 
@@ -147,6 +134,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
 }
 
 /* Main Content */
@@ -162,17 +151,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
-  background-color: white;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 1.5rem;
+  background-color: var(--surface-color);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 
   @media (min-width: 1024px) {
     display: none;
-  }
-
-  :host-context(.dark) & {
-    background-color: #0a0a0a;
-    border-bottom-color: #1f2937;
   }
 }
 
@@ -183,16 +171,14 @@
 }
 
 .mobile-icon {
-  color: #1e88e5;
+  color: var(--primary);
+  font-size: 1.5rem;
 }
 
 .mobile-name {
   font-weight: 700;
-  color: #111827;
-
-  :host-context(.dark) & {
-    color: white;
-  }
+  color: var(--text-main);
+  font-size: 1.1rem;
 }
 
 .mobile-menu-btn {
@@ -200,18 +186,13 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #4b5563;
+  color: var(--text-muted);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
 
   &:hover {
-    color: #111827;
-  }
-
-  :host-context(.dark) & {
-    color: #9ca3af;
-
-    &:hover {
-      color: white;
-    }
+    color: var(--text-main);
+    background-color: var(--surface-hover);
   }
 }
 
@@ -219,4 +200,9 @@
 .content-area {
   flex: 1;
   overflow-y: auto;
+  padding: 1.5rem;
+
+  @media (min-width: 1024px) {
+    padding: 2rem 2.5rem;
+  }
 }
