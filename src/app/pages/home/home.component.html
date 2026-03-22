@@ -1,11 +1,12 @@
 <div class="login-container">
   <div class="login-wrapper">
     <div class="content-split">
+      
       <!-- Left Side: Welcome Panel -->
       <div class="welcome-panel">
         <div class="background-overlay"></div>
-        
-        <!--<div class="panel-header">
+
+        <!-- <div class="panel-header">
           <div class="brand">
             <div class="brand-icon">
               <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -14,16 +15,20 @@
             </div>
             <h2 class="brand-name">Propel</h2>
           </div>
-        </div>-->
+        </div> -->
 
         <div class="panel-content">
           <div class="welcome-text">
             <h1 class="welcome-title">
-              Tu asistente en tu negocio.
+              <strong>Toma el control total de tu negocio desde un solo lugar.</strong>
             </h1>
-            <h2 class="welcome-subtitle">
-              Bienvenido de nuevo! Accede a tus perfiles de negocio, gestiona pedidos de productos y simplifica tu flujo de trabajo con nuestra plataforma poderosa e intuitiva.
-            </h2>
+            <p class="welcome-description">
+              Gestiona perfiles, centraliza tus pedidos y acelera tu flujo de trabajo con una plataforma diseñada para
+              la acción.
+            </p>
+            <p class="welcome-emphasis">
+              <em>Menos caos, más resultados.</em>
+            </p>
           </div>
           <div class="panel-actions">
             <button class="btn-learn-more">
@@ -41,22 +46,17 @@
       <div class="action-panel">
         <div class="form-container">
           <div class="form-header">
-            <h3 class="form-title">Bienvenido de nuevo</h3>
-            <p class="form-subtitle">Por favor ingresa tus datos para iniciar sesión.</p>
+            <h3 class="form-title">¡Qué bueno verte otra vez!</h3>
+            <p class="form-subtitle">Accede a tu cuenta para continuar gestionando tu negocio.</p>
           </div>
 
           <div class="form-content">
             <div class="mode-selector">
               <div class="mode-toggle">
-                <button 
-                  (click)="mode.set('signin')"
-                  [class.active]="mode() === 'signin'"
-                  class="mode-button">
+                <button (click)="mode.set('signin')" [class.active]="mode() === 'signin'" class="mode-button">
                   <span class="truncate">Iniciar Sesión</span>
                 </button>
-                <button 
-                  (click)="navigateToRegister()"
-                  class="mode-button">
+                <button (click)="navigateToRegister()" class="mode-button">
                   <span class="truncate">Registrarse</span>
                 </button>
               </div>
@@ -67,10 +67,7 @@
                 <p class="field-label">Correo Electrónico</p>
                 <div class="input-wrapper">
                   <span class="material-symbols-outlined input-icon">mail</span>
-                  <input 
-                    class="form-input" 
-                    placeholder="Enter your email" 
-                    type="email"/>
+                  <input class="form-input" placeholder="Ingresa tu correo electrónico" type="email" />
                 </div>
               </label>
 
@@ -81,10 +78,8 @@
                 </div>
                 <div class="input-wrapper">
                   <span class="material-symbols-outlined input-icon">lock</span>
-                  <input 
-                    class="form-input password-input" 
-                    placeholder="Enter your password" 
-                    [type]="showPassword() ? 'text' : 'password'"/>
+                  <input class="form-input password-input" placeholder="Ingresa tu contraseña"
+                    [type]="showPassword() ? 'text' : 'password'" />
                   <button class="toggle-visibility" type="button" (click)="togglePasswordVisibility()">
                     <span class="material-symbols-outlined">
                       {{ showPassword() ? 'visibility_off' : 'visibility' }}
