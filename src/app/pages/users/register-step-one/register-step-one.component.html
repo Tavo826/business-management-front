@@ -182,10 +182,10 @@
                   <div class="password-wrapper">
                     <input class="form-input" 
                            placeholder="Crea una contraseña segura" 
-                           type="password" 
+                           [type]="showPassword() ? 'text' : 'password'"
                            id="Contrasena"
                            [formControl]="registrationFormOne.controls.password"/>
-                    <button class="toggle-password" type="button">
+                    <button class="toggle-password" type="button" (click)="togglePasswordVisibility()">
                       <span class="material-symbols-outlined">visibility</span>
                     </button>
                   </div>
@@ -209,10 +209,10 @@
                   <div class="password-wrapper">
                     <input class="form-input" 
                            placeholder="Confirma tu contraseña" 
-                           type="password" 
+                           [type]="showPassword() ? 'text' : 'password'"
                            id="ConfirmarContrasena"
                            [formControl]="registrationFormOne.controls.confirmPassword"/>
-                    <button class="toggle-password" type="button">
+                    <button class="toggle-password" type="button" (click)="togglePasswordVisibility()">
                       <span class="material-symbols-outlined">visibility</span>
                     </button>
                   </div>
@@ -239,7 +239,7 @@
           <button routerLink="/home" class="btn-secondary">
             Cancelar
           </button>
-          <button routerLink="/register/step-2" class="btn-primary">
+          <button (click)="continueRegistration()" class="btn-primary">
             <span>Siguiente: Info Negocio</span>
             <span class="material-symbols-outlined">arrow_forward</span>
           </button>

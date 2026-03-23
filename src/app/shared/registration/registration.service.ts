@@ -19,7 +19,9 @@ export class RegistrationService {
   }
 
   setUserInfo(data: User) {
-    localStorage.setItem(this.userKey, JSON.stringify(data));
+    const encryptedPassword = btoa(data.password);
+    const userDataToStore = { ...data, password: encryptedPassword };
+    localStorage.setItem(this.userKey, JSON.stringify(userDataToStore));
   }
 
   getBusinessFromStorage(): any | null {
