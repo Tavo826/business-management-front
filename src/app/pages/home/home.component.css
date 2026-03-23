@@ -355,6 +355,13 @@
   }
 }
 
+.validationError {
+  font-size: 0.85rem;
+  padding: 8px;
+  margin-top: 5px;
+  color: red;
+}
+
 .toggle-visibility {
   position: absolute;
   right: 1rem;

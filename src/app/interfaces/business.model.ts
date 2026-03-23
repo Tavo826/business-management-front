@@ -2,12 +2,13 @@ import { BankAccount } from "./bank.models";
 import { SocialMedia } from "./media.models";
 
 export interface Business {
-  businessName: string;
+  name: string;
   nit: string;
-  businessPhone: string;
-  businessAddress: string;
-  businessEmail: string;
-  businessDescription: string;
+  phone: string;
+  address: string;
+  email: string;
+  description: string;
+  ownerDocumentId?: string;
   socialMediaList?: SocialMedia[];
   bankAccountList?: BankAccount[];
   createdAt?: Date;

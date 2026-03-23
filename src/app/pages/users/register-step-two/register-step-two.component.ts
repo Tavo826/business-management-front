@@ -150,12 +150,12 @@ export class RegisterStepTwoComponent {
     if (this.registrationFormTwo.valid) {
       
       const business: Business = {
-        businessName: this.registrationFormTwo.value.businessName!,
+        name: this.registrationFormTwo.value.businessName!,
         nit: this.registrationFormTwo.value.nit!,
-        businessPhone: this.registrationFormTwo.value.businessPhone!,
-        businessAddress: this.registrationFormTwo.value.businessAddress!,
-        businessEmail: this.registrationFormTwo.value.businessEmail!,
-        businessDescription: this.registrationFormTwo.value.businessDescription!,
+        phone: this.registrationFormTwo.value.businessPhone!,
+        address: this.registrationFormTwo.value.businessAddress!,
+        email: this.registrationFormTwo.value.businessEmail!,
+        description: this.registrationFormTwo.value.businessDescription!,
       };
 
       business.socialMediaList = this.socialMediaList();
@@ -165,10 +165,7 @@ export class RegisterStepTwoComponent {
       this.registrationService.setSocialMediaInfo(this.socialMediaList());
       this.registrationService.setBankAccountsInfo(this.bankAccountList());
 
-      this.saveUserRegistration(this.registrationService.getUserFromStorage()!)
-      this.saveBusinessRegistration(business)
-      
-      this.router.navigate(['/app/dashboard']);
+      this.saveUserRegistration(this.registrationService.getUserFromStorage()!, business);
     } else {
       Object.keys(this.registrationFormTwo.controls).forEach(key => {
         this.registrationFormTwo.get(key)?.markAsTouched();
@@ -176,14 +173,14 @@ export class RegisterStepTwoComponent {
     }
   }
 
-  saveUserRegistration(user: User) {
-
+  saveUserRegistration(user: User, business: Business) {
     this.httpAuthProvider.registerUser(user).subscribe({
       next: () => {
-        this.isSubmitted.set(false);
+        business.ownerDocumentId = user.documentId;
+        this.saveBusinessRegistration(business);
       },
       error: (error) => {
-        this.showError(error)
+        this.showError(error);
         this.isSubmitted.set(false);
       }
     });
@@ -193,9 +190,10 @@ export class RegisterStepTwoComponent {
     this.httpBusinessProvider.registerBusiness(business).subscribe({
       next: () => {
         this.isSubmitted.set(false);
+        this.router.navigate(['/app/dashboard']);
       },
       error: (error) => {
-        this.showError(error)
+        this.showError(error);
         this.isSubmitted.set(false);
       }
     });
