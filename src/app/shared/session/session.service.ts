@@ -76,6 +76,8 @@ export class SessionService {
   handleLoginError (error: any) {
     let errorMessage = "An error ocurred in the request"
 
+    console.log(error)
+
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`
     } else if (error.status) {
@@ -83,7 +85,7 @@ export class SessionService {
       if (error.status === 401) {
         errorMessage = 'Invalid credentials'
       } else {
-        errorMessage = `Error ${error.status}: ${error.error?.error || error.statusText}`
+        errorMessage = `${error.status}: ${error.error?.title || error.statusText}`
       }
     }
 
@@ -108,7 +110,7 @@ export class SessionService {
           documentType: payload.documentType,
           name: payload.name,
           surname: payload.surname,
-          email: payload.email,
+          email: payload.sub,
           password: "",
           birthdate: payload.birthdate,
           createdAt: payload.createdAt,

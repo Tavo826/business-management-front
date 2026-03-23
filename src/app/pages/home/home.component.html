@@ -1,29 +1,23 @@
 <div class="login-container">
   <div class="login-wrapper">
     <div class="content-split">
+      
       <!-- Left Side: Welcome Panel -->
       <div class="welcome-panel">
         <div class="background-overlay"></div>
-        
-        <!--<div class="panel-header">
-          <div class="brand">
-            <div class="brand-icon">
-              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                <path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
-              </svg>
-            </div>
-            <h2 class="brand-name">Propel</h2>
-          </div>
-        </div>-->
 
         <div class="panel-content">
           <div class="welcome-text">
             <h1 class="welcome-title">
-              Tu asistente en tu negocio.
+              <strong>Toma el control total de tu negocio desde un solo lugar.</strong>
             </h1>
-            <h2 class="welcome-subtitle">
-              Bienvenido de nuevo! Accede a tus perfiles de negocio, gestiona pedidos de productos y simplifica tu flujo de trabajo con nuestra plataforma poderosa e intuitiva.
-            </h2>
+            <p class="welcome-description">
+              Gestiona perfiles, centraliza tus pedidos y acelera tu flujo de trabajo con una plataforma diseñada para
+              la acción.
+            </p>
+            <p class="welcome-emphasis">
+              <em>Menos caos, más resultados.</em>
+            </p>
           </div>
           <div class="panel-actions">
             <button class="btn-learn-more">
@@ -41,57 +35,75 @@
       <div class="action-panel">
         <div class="form-container">
           <div class="form-header">
-            <h3 class="form-title">Bienvenido de nuevo</h3>
-            <p class="form-subtitle">Por favor ingresa tus datos para iniciar sesión.</p>
+            <h3 class="form-title">¡Qué bueno verte otra vez!</h3>
+            <p class="form-subtitle">Accede a tu cuenta para continuar gestionando tu negocio.</p>
           </div>
 
           <div class="form-content">
             <div class="mode-selector">
               <div class="mode-toggle">
-                <button 
-                  (click)="mode.set('signin')"
-                  [class.active]="mode() === 'signin'"
-                  class="mode-button">
+                <button (click)="mode.set('signin')" [class.active]="mode() === 'signin'" class="mode-button">
                   <span class="truncate">Iniciar Sesión</span>
                 </button>
-                <button 
-                  (click)="navigateToRegister()"
-                  class="mode-button">
+                <button (click)="navigateToRegister()" class="mode-button">
                   <span class="truncate">Registrarse</span>
                 </button>
               </div>
             </div>
 
             <form class="login-form" (submit)="login($event)">
-              <label class="form-field">
-                <p class="field-label">Correo Electrónico</p>
-                <div class="input-wrapper">
-                  <span class="material-symbols-outlined input-icon">mail</span>
-                  <input 
-                    class="form-input" 
-                    placeholder="Enter your email" 
-                    type="email"/>
-                </div>
-              </label>
 
-              <label class="form-field">
-                <div class="field-header">
-                  <p class="field-label">Contraseña</p>
-                  <a class="forgot-link">¿Olvidaste tu contraseña?</a>
+              <div class="form-field-wrapper">
+                <label class="form-field">
+                  <p class="field-label">Correo Electrónico</p>
+                  <div class="input-wrapper">
+                    <span class="material-symbols-outlined input-icon">mail</span>
+                    <input class="form-input" 
+                           placeholder="Ingresa tu correo electrónico" 
+                           type="email" 
+                           [formControl]="loginForm.controls.email"/>
+                  </div>
+                </label>
+                <div *ngIf="loginForm.controls.email.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!loginForm.controls.email.errors['required']">
+                    Correo electrónico es requerido
+                  </div>
+                  <div [hidden]="!loginForm.controls.email.errors['email']">
+                    Correo electrónico debe ser válido
+                  </div>
                 </div>
-                <div class="input-wrapper">
-                  <span class="material-symbols-outlined input-icon">lock</span>
-                  <input 
-                    class="form-input password-input" 
-                    placeholder="Enter your password" 
-                    [type]="showPassword() ? 'text' : 'password'"/>
-                  <button class="toggle-visibility" type="button" (click)="togglePasswordVisibility()">
-                    <span class="material-symbols-outlined">
-                      {{ showPassword() ? 'visibility_off' : 'visibility' }}
-                    </span>
-                  </button>
+              </div>
+
+              <div class="form-field-wrapper">
+                <label class="form-field">
+                  <div class="field-header">
+                    <p class="field-label">Contraseña</p>
+                    <!-- <a class="forgot-link">¿Olvidaste tu contraseña?</a> -->
+                  </div>
+                  <div class="input-wrapper">
+                    <span class="material-symbols-outlined input-icon">lock</span>
+                    <input class="form-input password-input" 
+                           placeholder="Ingresa tu contraseña"
+                           [type]="showPassword() ? 'text' : 'password'" 
+                           [formControl]="loginForm.controls.password"/>
+                    <button class="toggle-visibility" type="button" (click)="togglePasswordVisibility()">
+                      <span class="material-symbols-outlined">
+                        {{ showPassword() ? 'visibility_off' : 'visibility' }}
+                      </span>
+                    </button>
+                  </div>
+                </label>
+                <div *ngIf="loginForm.controls.password.errors && isSubmitted"
+                  class="alert alert-danger validationError mt-2">
+                  <div [hidden]="!loginForm.controls.password.errors['required']">
+                    Contraseña es requerida
+                  </div>
+                  <div [hidden]="!loginForm.controls.password.errors['minlength']">
+                    Contraseña debe tener al menos 8 caracteres
+                  </div>
                 </div>
-              </label>
+              </div>
 
               <button type="submit" class="btn-submit">
                 <span class="truncate">Iniciar Sesión</span>
@@ -99,23 +111,10 @@
             </form>
           </div>
 
-          <!--<div class="divider">
-            <div class="divider-line"></div>
-            <span class="divider-text">O continuar con</span>
-            <div class="divider-line"></div>
-          </div>
-
-          <button class="btn-google">
-            <svg class="google-icon" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22.5777 12.2618C22.5777 11.4545 22.5113 10.6659 22.3836 9.9H12V14.3318H18.0695C17.8227 15.6818 17.0618 16.8591 15.9327 17.6227V20.2636H19.7409C21.5677 18.55 22.5777 15.6955 22.5777 12.2618Z" fill="#4285F4"></path>
-              <path d="M12 23C14.9336 23 17.4309 22.0182 19.2577 20.2636L15.9327 17.6227C14.9509 18.25 13.6336 18.6682 12 18.6682C9.28318 18.6682 6.94227 16.8818 6.04545 14.45H2.12227V17.1818C3.93136 20.6636 7.71182 23 12 23Z" fill="#34A853"></path>
-              <path d="M6.04545 14.45C5.83364 13.8409 5.70273 13.1864 5.70273 12.5C5.70273 11.8136 5.83364 11.1591 6.04545 10.55H2.12227C1.41818 11.8364 1 13.5682 1 15.5C1 17.4318 1.41818 19.1636 2.12227 20.45L6.04545 17.7182V14.45Z" fill="#FBBC05"></path>
-              <path d="M12 6.33182C13.7482 6.33182 15.045 7.07727 15.6605 7.66364L19.3218 4.09545C17.4227 2.38182 14.9336 1 12 1C7.71182 1 3.93136 3.33636 2.12227 6.81818L6.04545 9.55C6.94227 7.11818 9.28318 6.33182 12 6.33182Z" fill="#EA4335"></path>
-            </svg>
-            <span class="truncate">Continuar con Google</span>
-          </button>-->
         </div>
       </div>
     </div>
   </div>
 </div>
+<app-error [show]="showErrorModal()" [title]="errorTitle" [message]="errorMessage"
+  (close)="closeErrorModal()"></app-error>

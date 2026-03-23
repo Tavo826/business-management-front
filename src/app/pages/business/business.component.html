@@ -1,97 +1,43 @@
-<div class="businesses-container">
-  <!-- Sidebar -->
-  <!--<aside class="sidebar">
-    <div class="sidebar-content">
-      <div class="sidebar-main">
-         Brand Section 
-        <div class="brand-section">
-          <div class="brand-avatar"></div>
-          <div class="brand-info">
-            <h1 class="brand-name">Innovate Inc.</h1>
-            <p class="brand-type">Personal Account</p>
-          </div>
-        </div>
+<!-- Main Content -->
+<main class="businesses-main">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-text">
+      <h1 class="page-title">My Businesses</h1>
+      <p class="page-subtitle">Manage your business profiles and view key metrics.</p>
+    </div>
+    <button class="btn-create" (click)="createBusiness()">
+      <span class="material-symbols-outlined">add</span>
+      <span>Create New Business</span>
+    </button>
+  </div>
 
-         Navigation 
-        <nav class="nav-menu">
-          <a routerLink="/app/dashboard" class="nav-item">
-            <span class="material-symbols-outlined nav-icon">dashboard</span>
-            <p class="nav-label">Dashboard</p>
-          </a>
-          <a routerLink="/app/businesses" routerLinkActive="active" class="nav-item">
-            <span class="material-symbols-outlined nav-icon">business_center</span>
-            <p class="nav-label">Businesses</p>
-          </a>
-          <a routerLink="/app/orders" class="nav-item">
-            <span class="material-symbols-outlined nav-icon">shopping_cart</span>
-            <p class="nav-label">Orders</p>
-          </a>
-          <a routerLink="/app/profile" class="nav-item">
-            <span class="material-symbols-outlined nav-icon">person</span>
-            <p class="nav-label">Profile</p>
-          </a>
-        </nav>
+  <!-- Business Cards Grid -->
+  <div class="business-grid">
+    @for (business of businesses(); track business.id) {
+    <div class="business-card">
+      <div class="business-image" [style.background-image]="'url(' + business.image + ')'">
       </div>
-
-       Bottom Actions 
-      <div class="sidebar-footer">
-        <a href="#" class="nav-item">
-          <span class="material-symbols-outlined nav-icon">settings</span>
-          <p class="nav-label">Settings</p>
-        </a>
-        <a routerLink="/login" class="nav-item">
-          <span class="material-symbols-outlined nav-icon">logout</span>
-          <p class="nav-label">Log out</p>
-        </a>
+      <div class="business-info">
+        <h3 class="business-name">{{ business.name }}</h3>
+        <p class="business-status" [class.status-active]="business.statusType === 'active'"
+          [class.status-complete]="business.statusType === 'complete'"
+          [class.status-reviews]="business.statusType === 'reviews'"
+          [class.status-inactive]="business.statusType === 'inactive'">
+          {{ business.status }}
+        </p>
+      </div>
+      <div class="business-actions">
+        <button class="btn-action btn-edit">
+          <span class="material-symbols-outlined">edit</span>
+          <span>Edit</span>
+        </button>
+        <button class="btn-action btn-delete" (click)="deleteBusiness(business.id)">
+          <span class="material-symbols-outlined">delete</span>
+          <span>Delete</span>
+        </button>
       </div>
     </div>
-  </aside>-->
-
-  <!-- Main Content -->
-  <main class="main-content">
-    <!-- Page Header -->
-    <div class="page-header">
-      <div class="header-text">
-        <h1 class="page-title">My Businesses</h1>
-        <p class="page-subtitle">Manage your business profiles and view key metrics.</p>
-      </div>
-      <button class="btn-create" (click)="createBusiness()">
-        <span class="material-symbols-outlined">add</span>
-        <span>Create New Business</span>
-      </button>
-    </div>
-
-    <!-- Business Cards Grid -->
-    <div class="business-grid">
-      @for (business of businesses(); track business.id) {
-        <div class="business-card">
-          <div 
-            class="business-image"
-            [style.background-image]="'url(' + business.image + ')'">
-          </div>
-          <div class="business-info">
-            <h3 class="business-name">{{ business.name }}</h3>
-            <p 
-              class="business-status"
-              [class.status-active]="business.statusType === 'active'"
-              [class.status-complete]="business.statusType === 'complete'"
-              [class.status-reviews]="business.statusType === 'reviews'"
-              [class.status-inactive]="business.statusType === 'inactive'">
-              {{ business.status }}
-            </p>
-          </div>
-          <div class="business-actions">
-            <button class="btn-action btn-edit">
-              <span class="material-symbols-outlined">edit</span>
-              <span>Edit</span>
-            </button>
-            <button class="btn-action btn-delete" (click)="deleteBusiness(business.id)">
-              <span class="material-symbols-outlined">delete</span>
-              <span>Delete</span>
-            </button>
-          </div>
-        </div>
-      }
-    </div>
-  </main>
-</div>
+    }
+  </div>
+</main>

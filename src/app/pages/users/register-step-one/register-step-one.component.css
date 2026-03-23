@@ -17,35 +17,25 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  white-space: nowrap;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: white;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--surface-color);
   padding: 0.75rem 2.5rem;
   position: sticky;
   top: 0;
   z-index: 50;
-
-  :host-context(.dark) & {
-    border-bottom-color: #2a3441;
-    background-color: #111a22;
-  }
 }
 
 .header-brand {
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #111418;
-
-  :host-context(.dark) & {
-    color: white;
-  }
+  color: var(--text-main);
 }
 
 .logo {
   width: 2rem;
   height: 2rem;
-  color: #1e88e5;
+  color: var(--primary);
 
   .material-symbols-outlined {
     font-size: 32px;
@@ -53,15 +43,10 @@
 }
 
 .brand-title {
-  color: #111418;
+  color: var(--text-main);
   font-size: 1.125rem;
   font-weight: 700;
-  line-height: 1.25;
   letter-spacing: -0.015em;
-
-  :host-context(.dark) & {
-    color: white;
-  }
 }
 
 .header-nav {
@@ -82,19 +67,14 @@
 }
 
 .nav-link {
-  color: #111418;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.5;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
 
   &:hover {
-    color: #1e88e5;
-  }
-
-  :host-context(.dark) & {
-    color: white;
+    color: var(--primary);
   }
 }
 
@@ -164,26 +144,16 @@
 }
 
 .page-title {
-  color: #111418;
+  color: var(--text-main);
   font-size: 2.25rem;
   font-weight: 900;
   line-height: 1.25;
-  letter-spacing: -0.033em;
-
-  :host-context(.dark) & {
-    color: white;
-  }
+  letter-spacing: -0.02em;
 }
 
 .page-subtitle {
-  color: #617589;
+  color: var(--text-muted);
   font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-
-  :host-context(.dark) & {
-    color: #9ca3af;
-  }
 }
 
 /* Stepper */
@@ -205,35 +175,27 @@
   width: 2rem;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
-  background-color: #e5e7eb;
-  color: #617589;
+  border-radius: var(--radius-full);
+  background-color: var(--border-color);
+  color: var(--text-muted);
   font-size: 0.875rem;
   font-weight: 700;
 
   &.active {
-    background-color: #1e88e5;
+    background-color: var(--primary);
     color: white;
-  }
-
-  :host-context(.dark) & {
-    background-color: #2a3441;
   }
 }
 
 .step-label {
-  color: #617589;
-  font-weight: 500;
+  color: var(--text-muted);
+  font-weight: 600;
   font-size: 0.875rem;
   display: none;
 
   &.active {
-    color: #111418;
+    color: var(--text-main);
     font-weight: 700;
-
-    :host-context(.dark) & {
-      color: white;
-    }
   }
 
   @media (min-width: 640px) {
@@ -244,25 +206,16 @@
 .step-divider {
   height: 2px;
   width: 2rem;
-  background-color: #e5e7eb;
-
-  :host-context(.dark) & {
-    background-color: #374151;
-  }
+  background-color: var(--border-color);
 }
 
 /* Form Card */
 .form-card {
-  background-color: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #e5e7eb;
+  background-color: var(--surface-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
   overflow: hidden;
-
-  :host-context(.dark) & {
-    background-color: #111a22;
-    border-color: #2a3441;
-  }
 }
 
 .card-content {
@@ -282,20 +235,16 @@
   width: 2.5rem;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
-  background-color: rgba(30, 136, 229, 0.1);
-  color: #1e88e5;
+  border-radius: var(--radius-full);
+  background-color: var(--primary-light);
+  color: var(--primary);
 }
 
 .section-title {
-  color: #111418;
+  color: var(--text-main);
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.25;
-
-  :host-context(.dark) & {
-    color: white;
-  }
 }
 
 /* Form Grid */
@@ -322,53 +271,43 @@
 }
 
 .field-label {
-  color: #111418;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.5;
-
-  :host-context(.dark) & {
-    color: white;
-  }
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .form-input {
   width: 100%;
-  border-radius: 0.5rem;
-  border: 1px solid #dbe0e6;
-  background-color: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-color);
   height: 3rem;
   padding: 0 1rem;
   font-size: 1rem;
-  color: #111418;
+  font-family: inherit;
+  color: var(--text-main);
   outline: none;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &::placeholder {
-    color: #617589;
+    color: var(--text-muted);
   }
 
   &:focus {
-    border-color: #1e88e5;
-    ring: 1px solid #1e88e5;
-  }
-
-  :host-context(.dark) & {
-    border-color: #374151;
-    background-color: #1a232e;
-    color: white;
+    border-color: var(--primary);
   }
 }
 
 .requiredStar {
-    color: red;
-    padding-left: 5px;
+  color: red;
+  padding-left: 5px;
 }
 
 .validationError {
-    font-size: 0.85rem;
-    padding: 8px;
-    margin-top: 5px;
+  font-size: 0.85rem;
+  padding: 8px;
+  margin-top: 5px;
+  color: red;
 }
 
 /* Select */
@@ -378,27 +317,21 @@
 
 .form-select {
   width: 100%;
-  border-radius: 0.5rem;
-  border: 1px solid #dbe0e6;
-  background-color: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-color);
   height: 3rem;
   padding: 0 1rem;
   font-size: 1rem;
-  color: #111418;
+  font-family: inherit;
+  color: var(--text-main);
   outline: none;
   appearance: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:focus {
-    border-color: #1e88e5;
-    ring: 1px solid #1e88e5;
-  }
-
-  :host-context(.dark) & {
-    border-color: #374151;
-    background-color: #1a232e;
-    color: white;
+    border-color: var(--primary);
   }
 }
 
@@ -450,44 +383,29 @@
 /* Card Footer */
 .card-footer {
   padding: 1.5rem 2rem;
-  background-color: #fafafa;
-  border-top: 1px solid #e5e7eb;
+  background-color: var(--surface-hover);
+  border-top: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 1rem;
-
-  :host-context(.dark) & {
-    background-color: #0e141b;
-    border-top-color: #2a3441;
-  }
 }
 
 .btn-secondary {
   flex: none;
   height: 3rem;
   padding: 0 2rem;
-  border-radius: 0.5rem;
-  background-color: white;
-  border: 1px solid #dbe0e6;
-  color: #111418;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--transition-fast);
 
   &:hover {
-    background-color: #f3f4f6;
-  }
-
-  :host-context(.dark) & {
-    background-color: #1a232e;
-    border-color: #374151;
-    color: white;
-
-    &:hover {
-      background-color: #252f3e;
-    }
+    background-color: var(--surface-hover);
   }
 }
 
@@ -495,22 +413,24 @@
   flex: none;
   height: 3rem;
   padding: 0 2rem;
-  border-radius: 0.5rem;
-  background-color: #1e88e5;
+  border-radius: var(--radius-md);
+  background-color: var(--primary);
   color: white;
   font-weight: 700;
-  font-size: 0.875rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-sm);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: background-color 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
-    background-color: rgba(30, 136, 229, 0.9);
+    background-color: var(--primary-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
   }
 
   .material-symbols-outlined {
@@ -525,12 +445,12 @@
 }
 
 .footer-message {
-  color: #617589;
+  color: var(--text-muted);
   font-size: 1rem;
 }
 
 .link-primary {
-  color: #1e88e5;
+  color: var(--primary);
   font-weight: 700;
   cursor: pointer;
 

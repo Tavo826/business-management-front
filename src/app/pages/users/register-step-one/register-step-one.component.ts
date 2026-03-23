@@ -1,5 +1,5 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RegistrationService } from '../../../shared/registration/registration.service';
@@ -19,6 +19,7 @@ export class RegisterStepOneComponent {
   private readonly router = inject(Router)
   private readonly registrationService = inject(RegistrationService)
 
+  showPassword = signal(false);
   isSubmitted: boolean = false
 
   ngOnInit() {
@@ -64,7 +65,7 @@ export class RegisterStepOneComponent {
 
       this.registrationService.setUserInfo(user);
       
-      this.router.navigate(['/register/step-2']);
+      this.router.navigate(['/register/step-two']);
     } else {
       Object.keys(this.registrationFormOne.controls).forEach(key => {
         this.registrationFormOne.get(key)?.markAsTouched();
@@ -83,6 +84,10 @@ export class RegisterStepOneComponent {
       group.get('confirmPassword')?.setErrors(null);
       return null;
     }
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword.set(!this.showPassword());
   }
 
 }
