@@ -37,7 +37,7 @@ export class RegisterStepOneComponent {
 
   registrationFormOne = this.formBuilder.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
-    surname: ['', [Validators.required, Validators.minLength(3)]],
+    surname: ['', [Validators.required, Validators.minLength(2)]],
     documentType: ['', [Validators.required]],
     documentNumber: ['', [Validators.required, Validators.minLength(8)]],
     birthdate: ['', [Validators.required]],

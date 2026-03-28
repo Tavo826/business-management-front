@@ -31,7 +31,9 @@ export const routes: Routes = [
             { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent), canActivate : [AuthGuard] },
             { path: 'profile', loadComponent: () => import('./pages/users/profile/profile.component').then(m => m.ProfileComponent), canActivate : [AuthGuard] },
             { path: 'orders', loadComponent: () => import('./pages/orders/orders.component').then(m => m.OrdersComponent), canActivate : [AuthGuard] },
-            { path: 'businesses', loadComponent: () => import('./pages/business/business.component').then(m => m.BusinessComponent), canActivate : [AuthGuard] }
+            { path: 'businesses', loadComponent: () => import('./pages/business/business.component').then(m => m.BusinessComponent), canActivate : [AuthGuard] },
+            { path: 'businesses/create', loadComponent: () => import('./pages/business/create-business/create-business.component').then(m => m.CreateBusinessComponent), canActivate : [AuthGuard] },
+            { path: 'businesses/edit/:nit', loadComponent: () => import('./pages/business/edit-business/edit-business.component').then(m => m.EditBusinessComponent), canActivate : [AuthGuard] }
         ]
     }
 ];

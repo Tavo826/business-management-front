@@ -1,60 +1,113 @@
 <div class="layout-container">
+  <!-- Mobile Overlay -->
+  @if (mobileMenuOpen) {
+    <div class="mobile-overlay" (click)="closeMenu()"></div>
+  }
+
   <div class="layout-wrapper">
     <!-- SideNavBar -->
-    <aside class="sidebar">
+    <aside class="sidebar" [class.sidebar-open]="mobileMenuOpen">
       <div class="sidebar-content">
         <div class="sidebar-main">
-          <!-- Brand Header -->
-          <div class="brand-section">
-            <div class="brand-avatar"></div>
-            <div class="brand-info">
-              <h1 class="brand-name">Innovate Inc.</h1>
-              <p class="brand-type">Personal Account</p>
-            </div>
+
+          <!-- Business Switcher -->
+          <div class="business-switcher-wrapper">
+            @if (businessDropdownOpen()) {
+              <div class="dropdown-overlay" (click)="businessDropdownOpen.set(false)"></div>
+            }
+            <button
+              class="business-switcher-btn"
+              (click)="toggleBusinessDropdown()"
+              [class.open]="businessDropdownOpen()">
+              <div class="brand-avatar"></div>
+              <div class="brand-info">
+                @if (businessContext.isLoading()) {
+                  <span class="brand-name brand-name--loading">Loading...</span>
+                } @else if (businessContext.activeBusiness()) {
+                  <h1 class="brand-name">{{ businessContext.activeBusiness()!.name }}</h1>
+                  <p class="brand-type">{{ businessContext.activeBusiness()!.nit }}</p>
+                } @else {
+                  <h1 class="brand-name">No business</h1>
+                  <p class="brand-type">Select one below</p>
+                }
+              </div>
+              <span class="material-symbols-outlined switcher-chevron">
+                {{ businessDropdownOpen() ? 'expand_less' : 'expand_more' }}
+              </span>
+            </button>
+
+            <!-- Dropdown -->
+            @if (businessDropdownOpen()) {
+              <div class="business-dropdown">
+                <p class="dropdown-label">Your businesses</p>
+                @for (biz of businessContext.businesses(); track biz.nit) {
+                  <button
+                    class="dropdown-item"
+                    [class.active]="businessContext.activeBusiness()?.nit === biz.nit"
+                    (click)="selectBusiness(biz)">
+                    <span class="dropdown-item-initials">{{ biz.name[0] }}</span>
+                    <div class="dropdown-item-info">
+                      <span class="dropdown-item-name">{{ biz.name }}</span>
+                      <span class="dropdown-item-nit">{{ biz.nit }}</span>
+                    </div>
+                    @if (businessContext.activeBusiness()?.nit === biz.nit) {
+                      <span class="material-symbols-outlined dropdown-check">check</span>
+                    }
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Bottom Actions -->
+          <div class="sidebar-footer">
+            <a 
+              routerLink="/login"
+              class="nav-item"
+              (click)="logOut()">
+              <span class="material-symbols-outlined nav-icon">logout</span>
+              <p class="nav-label">Salir</p>
+            </a>
           </div>
 
           <!-- Navigation -->
           <nav class="nav-menu">
-            <a 
-              routerLink="/app/dashboard" 
-              routerLinkActive="active" 
-              [routerLinkActiveOptions]="{exact: true}" 
-              class="nav-item">
+            <a
+              routerLink="/app/dashboard"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="nav-item"
+              (click)="closeMenu()">
               <span class="material-symbols-outlined nav-icon">dashboard</span>
-              <p class="nav-label">Dashboard</p>
+              <p class="nav-label">Menu</p>
             </a>
-            <a 
-              routerLink="/businesses"
-              class="nav-item">
+            <a
+              routerLink="/app/businesses"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="nav-item"
+              (click)="closeMenu()">
               <span class="material-symbols-outlined nav-icon">business_center</span>
-              <p class="nav-label">Businesses</p>
+              <p class="nav-label">Negocios</p>
             </a>
-            <a 
-              routerLink="/orders" 
-              class="nav-item">
+            <a
+              routerLink="/app/orders"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="nav-item"
+              (click)="closeMenu()">
               <span class="material-symbols-outlined nav-icon">shopping_cart</span>
-              <p class="nav-label">Orders</p>
+              <p class="nav-label">Ordenes</p>
             </a>
-            <a 
-              routerLink="/app/profile" 
-              routerLinkActive="active" 
-              class="nav-item">
+            <a
+              routerLink="/app/profile"
+              routerLinkActive="active"
+              class="nav-item"
+              (click)="closeMenu()">
               <span class="material-symbols-outlined nav-icon">person</span>
-              <p class="nav-label">Profile</p>
+              <p class="nav-label">Perfil</p>
             </a>
           </nav>
-        </div>
-
-        <!-- Bottom Actions -->
-        <div class="sidebar-footer">
-          <a href="#" class="nav-item">
-            <span class="material-symbols-outlined nav-icon">settings</span>
-            <p class="nav-label">Settings</p>
-          </a>
-          <a routerLink="/login" class="nav-item">
-            <span class="material-symbols-outlined nav-icon">logout</span>
-            <p class="nav-label">Log out</p>
-          </a>
         </div>
       </div>
     </aside>
@@ -65,10 +118,10 @@
       <header class="mobile-header">
         <div class="mobile-brand">
           <span class="material-symbols-outlined mobile-icon">business_center</span>
-          <span class="mobile-name">Innovate Inc.</span>
+          <span class="mobile-name">{{ businessContext.activeBusinessName() }}</span>
         </div>
-        <button class="mobile-menu-btn">
-          <span class="material-symbols-outlined">menu</span>
+        <button class="mobile-menu-btn" (click)="toggleMenu()">
+          <span class="material-symbols-outlined">{{ mobileMenuOpen ? 'close' : 'menu' }}</span>
         </button>
       </header>
 

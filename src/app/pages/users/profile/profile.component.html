@@ -2,11 +2,11 @@
   <div class="profile-content">
     <!-- Page Header -->
     <div class="page-header">
-      <p class="page-title">My Profile</p>
+      <p class="page-title">Mi perfil</p>
     </div>
 
     <!-- Profile Picture Section -->
-    <div class="profile-picture-card">
+    <!--<div class="profile-picture-card">
       <div class="picture-content">
         <div class="picture-section">
           <div class="avatar"></div>
@@ -24,20 +24,48 @@
           </button>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <!-- Personal Information Section -->
     <div class="info-card">
-      <h2 class="section-title">Personal Information</h2>
-      <form class="profile-form" (submit)="onSubmit($event)">
-        <div class="form-field full-width">
-          <label class="field-label" for="fullName">Full Name</label>
+      <h2 class="section-title">Información Personal</h2>
+      <form class="profile-form" [formGroup]="userForm">
+        <div class="form-field">
+          <label class="field-label" for="name">Nombres</label>
           <input 
             class="form-input" 
-            id="fullName" 
+            id="name" 
             type="text" 
-            [(ngModel)]="fullName"
-            name="fullName" />
+            [formControl]="userForm.controls.name"
+            name="name" />
+        </div>
+        <div *ngIf="userForm.controls.name.errors && isSubmitted"
+          class="alert alert-danger validationError mt-2">
+          <div [hidden]="!userForm.controls.name.errors['required']">
+            Nombre es requerido
+          </div>
+          <div [hidden]="!userForm.controls.name.errors['minlength']">
+            Nombre debe tener al menos 3 caracteres
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="surname">Apellido</label>
+          <input 
+            class="form-input" 
+            id="surname" 
+            type="text" 
+            [formControl]="userForm.controls.surname"
+            name="surname" />
+        </div>
+        <div *ngIf="userForm.controls.surname.errors && isSubmitted"
+          class="alert alert-danger validationError mt-2">
+          <div [hidden]="!userForm.controls.surname.errors['required']">
+            Apellido es requerido
+          </div>
+          <div [hidden]="!userForm.controls.surname.errors['minlength']">
+            Apellido debe tener al menos 2 caracteres
+          </div>
         </div>
 
         <div class="form-field">
@@ -46,33 +74,22 @@
             class="form-input" 
             id="email" 
             type="email" 
-            [(ngModel)]="email"
+            [formControl]="userForm.controls.email"
             name="email" />
         </div>
-
-        <div class="form-field password-field">
-          <label class="field-label" for="password">Password</label>
-          <div class="password-wrapper">
-            <input 
-              class="form-input" 
-              id="password" 
-              [type]="showPassword() ? 'text' : 'password'" 
-              [(ngModel)]="password"
-              name="password" />
-            <button 
-              class="toggle-visibility" 
-              type="button"
-              (click)="togglePasswordVisibility()">
-              <span class="material-symbols-outlined">
-                {{ showPassword() ? 'visibility_off' : 'visibility' }}
-              </span>
-            </button>
+        <div *ngIf="userForm.controls.email.errors && isSubmitted"
+          class="alert alert-danger validationError mt-2">
+          <div [hidden]="!userForm.controls.email.errors['required']">
+            Correo electrónico es requerido
+          </div>
+          <div [hidden]="!userForm.controls.email.errors['email']">
+            Correo electrónico debe ser válido
           </div>
         </div>
 
         <div class="form-actions">
-          <button class="btn-save" type="submit">
-            <span class="truncate">Save Changes</span>
+          <button class="btn-save" type="button" (click)="updateUserInfo()">
+            <span class="truncate">Guardar Cambios</span>
           </button>
         </div>
       </form>
@@ -80,20 +97,22 @@
 
     <!-- Danger Zone Section -->
     <div class="danger-zone">
-      <h2 class="danger-title">Danger Zone</h2>
+      <h2 class="danger-title">Zona de peligro</h2>
       <div class="danger-card">
         <div class="danger-content">
           <div class="danger-info">
-            <h3 class="danger-heading">Delete Account</h3>
+            <h3 class="danger-heading">Eliminar Cuenta</h3>
             <p class="danger-description">
-              Permanently remove your account and all of its content. This action is not reversible.
+              Eliminar permanentemente tu cuenta y todo su contenido. Esta acción no es reversible.
             </p>
           </div>
-          <button class="btn-delete">
-            <span class="truncate">Delete Account</span>
+          <button class="btn-delete" type="button" (click)="deleteAccount()">
+            <span class="truncate">Eliminar Cuenta</span>
           </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+<app-error [show]="showErrorModal()" [title]="errorTitle" [message]="errorMessage"
+  (close)="closeErrorModal()"></app-error>

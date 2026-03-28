@@ -200,6 +200,7 @@
   overflow: hidden;
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-color);
+  border-top: 3px solid var(--primary);
   background-color: var(--surface-color);
   box-shadow: var(--shadow-sm);
   min-width: 800px;
