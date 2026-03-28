@@ -207,11 +207,11 @@
   line-height: 1.25;
   letter-spacing: -0.015em;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 2px solid var(--primary);
 
   :host-context(.dark) & {
     color: white;
-    border-bottom-color: #1e293b;
+    border-bottom-color: var(--primary);
   }
 }
 
@@ -339,18 +339,28 @@
   border-radius: 0.5rem;
   height: 2.5rem;
   padding: 0 1.25rem;
-  background-color: #1e88e5;
+  background-color: var(--primary);
   color: white;
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.5;
   letter-spacing: 0.015em;
   border: none;
-  transition: background-color 0.2s;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 
   &:hover {
-    background-color: rgba(30, 136, 229, 0.9);
+    background-color: var(--primary-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
   }
+}
+
+.validationError {
+  font-size: 0.85rem;
+  padding: 8px;
+  margin-top: 5px;
+  color: red;
 }
 
 /* Danger Zone */

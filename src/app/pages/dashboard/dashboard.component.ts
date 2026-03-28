@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, signal, OnInit } from '@angular/core';
-import { inject } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { ChangeDetectionStrategy, Component, signal, OnInit, inject } from '@angular/core';
+import { BusinessContextService } from '../../services/business-context.service';
 import { CommonModule } from '@angular/common';
 
 interface User {
@@ -51,6 +50,8 @@ interface Order {
 
 export class DashboardComponent implements OnInit {
 
+  businessContext = inject(BusinessContextService);
+
   isLoading = signal<boolean>(true);
 
   ngOnInit() {
@@ -60,7 +61,7 @@ export class DashboardComponent implements OnInit {
   }
 
   currentUser = signal<User>({
-    name: 'Innovate Inc.',
+    name: 'Marielo',
     role: 'Personal Account',
     avatar: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop'
   });

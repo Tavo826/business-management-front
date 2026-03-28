@@ -18,6 +18,16 @@ export class HttpBusinessProviderService {
 
   constructor() { }
 
+  getBusinessListByUserId(userId: string) {
+    return this.http.get<Business[]>(this.apiUrl + this.businessesEndpoint + "users/" + userId,
+      this.sessionService.getAuthHeaders()
+    )
+    .pipe(
+      map((response: Business[]) => response),
+      catchError(this.sessionService.handleError)
+    )
+  }
+
   public registerBusiness(model: Business) {
     return this.http.post<Business>(this.apiUrl + this.businessesEndpoint, model,
       this.sessionService.getAuthHeaders()
@@ -28,12 +38,22 @@ export class HttpBusinessProviderService {
     )
   }
 
-  getBusinessListByUserId(userId: string) {
-    return this.http.get<Business[]>(this.apiUrl + this.businessesEndpoint + "user/" + userId,
+  public updateBusiness(nit: string, model: Business) {
+    return this.http.put<Business>(this.apiUrl + this.businessesEndpoint + nit, model,
       this.sessionService.getAuthHeaders()
     )
     .pipe(
-      map((response: Business[]) => response),
+      map((response: Business) => response),
+      catchError(this.sessionService.handleError)
+    )
+  }
+
+  public deleteBusiness(nit: string) {
+    return this.http.delete(this.apiUrl + this.businessesEndpoint + nit,
+      this.sessionService.getAuthHeaders()
+    )
+    .pipe(
+      map((response: any) => response),
       catchError(this.sessionService.handleError)
     )
   }

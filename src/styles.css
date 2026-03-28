@@ -21,7 +21,7 @@
     --info-hover: #2563EB;
     --info-light: #DBEAFE;
 
-    --bg-color: #F8FAFC;
+    --bg-color: #F1F5F9;
     --surface-color: #FFFFFF;
     --surface-hover: #F1F5F9;
 
@@ -29,6 +29,14 @@
     --text-muted: #64748B;
     --border-color: #E2E8F0;
     --border-focus: #94A3B8;
+
+    /* Sidebar */
+    --sidebar-bg: #1E293B;
+    --sidebar-text: #CBD5E1;
+    --sidebar-text-bright: #F8FAFC;
+    --sidebar-hover: rgba(255, 255, 255, 0.08);
+    --sidebar-active: rgba(79, 70, 229, 0.25);
+    --sidebar-border: rgba(255, 255, 255, 0.08);
 
     /* Typography */
     --font-family: 'Inter', system-ui, -apple-system, sans-serif;
