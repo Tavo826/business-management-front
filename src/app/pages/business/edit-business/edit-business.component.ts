@@ -1,67 +1,47 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BankAccount } from '../../../interfaces/bank.models';
 import { SocialMedia } from '../../../interfaces/media.models';
-import { RegistrationService } from '../../../shared/registration/registration.service';
 import { Business } from '../../../interfaces/business.model';
-import { HttpAuthProviderService } from '../../../services/http-auth-provider.service';
-import { User } from '../../../interfaces/user.models';
-import { ErrorComponent } from '../../../components/error/error.component';
 import { HttpBusinessProviderService } from '../../../services/http-business-provider.service';
+import { BusinessContextService } from '../../../services/business-context.service';
+import { SessionService } from '../../../shared/session/session.service';
+import { ErrorComponent } from '../../../components/error/error.component';
 
 @Component({
-  selector: 'app-register-step-two',
+  selector: 'app-edit-business',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, CommonModule, ErrorComponent],
-  templateUrl: './register-step-two.component.html',
-  styleUrl: './register-step-two.component.css',
+  imports: [ReactiveFormsModule, CommonModule, ErrorComponent],
+  templateUrl: './edit-business.component.html',
+  styleUrl: './edit-business.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterStepTwoComponent {
+export class EditBusinessComponent {
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly registrationService = inject(RegistrationService);
-  private readonly httpAuthProvider = inject(HttpAuthProviderService);
-  private readonly httpBusinessProvider = inject(HttpBusinessProviderService)
+  private readonly route = inject(ActivatedRoute);
+  private readonly httpBusinessProvider = inject(HttpBusinessProviderService);
+  private readonly businessContext = inject(BusinessContextService);
+  private readonly sessionService = inject(SessionService);
 
   showSocialModal = signal(false);
   showBankModal = signal(false);
   showErrorModal = signal(false);
   isSubmitted = signal(false);
+  isLoading = signal(true);
 
-  errorMessage: string = '';
-  errorTitle: string = "Error registrando el usuario";
+  errorMessage = '';
+  errorTitle = 'Error actualizando el negocio';
+
+  private businessNit = '';
 
   socialMediaList = signal<SocialMedia[]>([]);
   bankAccountList = signal<BankAccount[]>([]);
 
-  ngOnInit() {
-
-    if (!this.registrationService.isStepOneComplete()) {
-      this.router.navigate(['/register/step-one']);
-      return;
-    }
-
-    const savedBusiness = this.registrationService.getBusinessFromStorage();
-    if (savedBusiness) {
-      this.registrationFormTwo.patchValue(savedBusiness);
-    }
-
-    const savedSocialMedia = this.registrationService.getSocialMediaFromStorage();
-    if (savedSocialMedia) {
-      this.socialMediaList.set(savedSocialMedia);
-    }
-
-    const savedBankAccounts = this.registrationService.getBankAccountsFromStorage();
-    if (savedBankAccounts) {
-      this.bankAccountList.set(savedBankAccounts);
-    }
-  }
-  
-  registrationFormTwo = this.formBuilder.group({
+  businessForm = this.formBuilder.group({
     businessName: ['', [Validators.required, Validators.minLength(3)]],
     nit: ['', [Validators.required, Validators.minLength(9)]],
     businessPhone: ['', [Validators.required, Validators.minLength(10)]],
@@ -82,10 +62,38 @@ export class RegisterStepTwoComponent {
     accountType: ['', [Validators.required]],
   });
 
-  removeSocialMedia(index: number) {
-    this.socialMediaList.update(list => list.filter((_, i) => i !== index));
+  ngOnInit() {
+    this.businessNit = this.route.snapshot.paramMap.get('nit') ?? '';
+
+    const business = this.businessContext.businesses().find(b => b.nit === this.businessNit);
+
+    if (business) {
+      this.populateForm(business);
+      this.isLoading.set(false);
+    } else {
+      this.router.navigate(['/app/businesses']);
+    }
   }
 
+  private populateForm(business: Business) {
+    this.businessForm.patchValue({
+      businessName: business.name,
+      nit: business.nit,
+      businessPhone: business.phone,
+      businessAddress: business.address,
+      businessEmail: business.email,
+      businessDescription: business.description,
+    });
+
+    if (business.socialMediaList) {
+      this.socialMediaList.set([...business.socialMediaList]);
+    }
+    if (business.bankAccountList) {
+      this.bankAccountList.set([...business.bankAccountList]);
+    }
+  }
+
+  // Social Media
   openSocialModal() {
     this.showSocialModal.set(true);
     this.socialMediaForm.reset();
@@ -102,7 +110,6 @@ export class RegisterStepTwoComponent {
         platformName: this.socialMediaForm.value.platformName!,
         url: this.socialMediaForm.value.url!,
       };
-      
       this.socialMediaList.update(list => [...list, newSocial]);
       this.closeSocialModal();
     } else {
@@ -112,6 +119,11 @@ export class RegisterStepTwoComponent {
     }
   }
 
+  removeSocialMedia(index: number) {
+    this.socialMediaList.update(list => list.filter((_, i) => i !== index));
+  }
+
+  // Bank Accounts
   openBankModal() {
     this.showBankModal.set(true);
     this.bankAccountForm.reset();
@@ -130,7 +142,6 @@ export class RegisterStepTwoComponent {
         accountNumber: this.bankAccountForm.value.accountNumber!,
         accountType: this.bankAccountForm.value.accountType!,
       };
-      
       this.bankAccountList.update(list => [...list, newAccount]);
       this.closeBankModal();
     } else {
@@ -144,59 +155,48 @@ export class RegisterStepTwoComponent {
     this.bankAccountList.update(list => list.filter((_, i) => i !== index));
   }
 
-  completeRegistration() {
+  // Submit
+  updateBusiness() {
     this.isSubmitted.set(true);
 
-    if (this.registrationFormTwo.valid) {
-      
+    if (this.businessForm.valid) {
+      const user = this.sessionService.getCurrentUserValue();
+
       const business: Business = {
-        name: this.registrationFormTwo.value.businessName!,
-        nit: this.registrationFormTwo.value.nit!,
-        phone: this.registrationFormTwo.value.businessPhone!,
-        address: this.registrationFormTwo.value.businessAddress!,
-        email: this.registrationFormTwo.value.businessEmail!,
-        description: this.registrationFormTwo.value.businessDescription!,
+        name: this.businessForm.value.businessName!,
+        nit: this.businessForm.value.nit!,
+        phone: this.businessForm.value.businessPhone!,
+        address: this.businessForm.value.businessAddress!,
+        email: this.businessForm.value.businessEmail!,
+        description: this.businessForm.value.businessDescription!,
+        ownerDocumentId: user?.documentId,
+        socialMediaList: this.socialMediaList(),
+        bankAccountList: this.bankAccountList(),
       };
 
-      business.socialMediaList = this.socialMediaList();
-      business.bankAccountList = this.bankAccountList();
-
-      this.registrationService.setBusinessInfo(business);
-      this.registrationService.setSocialMediaInfo(this.socialMediaList());
-      this.registrationService.setBankAccountsInfo(this.bankAccountList());
-
-      this.saveUserRegistration(this.registrationService.getUserFromStorage()!, business);
+      this.httpBusinessProvider.updateBusiness(this.businessNit, business).subscribe({
+        next: (updated) => {
+          this.businessContext.setActiveBusiness(updated);
+          this.isSubmitted.set(false);
+          if (user?.documentId) {
+            this.businessContext.loadBusinesses(user.documentId);
+          }
+          this.router.navigate(['/app/businesses']);
+        },
+        error: (error) => {
+          this.showError(error);
+          this.isSubmitted.set(false);
+        }
+      });
     } else {
-      Object.keys(this.registrationFormTwo.controls).forEach(key => {
-        this.registrationFormTwo.get(key)?.markAsTouched();
+      Object.keys(this.businessForm.controls).forEach(key => {
+        this.businessForm.get(key)?.markAsTouched();
       });
     }
   }
 
-  saveUserRegistration(user: User, business: Business) {
-    this.httpAuthProvider.registerUser(user).subscribe({
-      next: () => {
-        business.ownerDocumentId = user.documentId;
-        this.saveBusinessRegistration(business);
-      },
-      error: (error) => {
-        this.showError(error);
-        this.isSubmitted.set(false);
-      }
-    });
-  }
-
-  saveBusinessRegistration(business: Business) {
-    this.httpBusinessProvider.registerBusiness(business).subscribe({
-      next: () => {
-        this.isSubmitted.set(false);
-        this.router.navigate(['/app/dashboard']);
-      },
-      error: (error) => {
-        this.showError(error);
-        this.isSubmitted.set(false);
-      }
-    });
+  goBack() {
+    this.router.navigate(['/app/businesses']);
   }
 
   showError(message: string): void {

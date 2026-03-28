@@ -1,4 +1,4 @@
 export interface SocialMedia {
-  platform: string;
+  platformName: string;
   url: string;
 }

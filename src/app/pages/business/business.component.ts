@@ -1,65 +1,68 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-
-interface Business {
-  id: string;
-  name: string;
-  image: string;
-  status: string;
-  statusType: 'active' | 'complete' | 'reviews' | 'inactive';
-}
+import { ChangeDetectionStrategy, Component, inject,signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { BusinessContextService } from '../../services/business-context.service';
+import { SessionService } from '../../shared/session/session.service';
+import { HttpBusinessProviderService } from '../../services/http-business-provider.service';
+import { ErrorComponent } from '../../components/error/error.component';
 
 @Component({
   selector: 'app-business',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ErrorComponent],
   templateUrl: './business.component.html',
   styleUrl: './business.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BusinessComponent {
 
-  businesses = signal<Business[]>([
-    {
-      id: '1',
-      name: 'Innovate Solutions Inc.',
-      image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=300&fit=crop',
-      status: '15 Active Orders',
-      statusType: 'active'
-    },
-    {
-      id: '2',
-      name: 'Quantum Leap Corp.',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop',
-      status: 'Profile Complete',
-      statusType: 'complete'
-    },
-    {
-      id: '3',
-      name: 'Starlight Cafe',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop',
-      status: '3 New Reviews',
-      statusType: 'reviews'
-    },
-    {
-      id: '4',
-      name: 'The Daily Bread',
-      image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop',
-      status: 'No recent activity',
-      statusType: 'inactive'
-    }
-  ]);
+  businessContext = inject(BusinessContextService);
+  businessProvider = inject(HttpBusinessProviderService);
+  private sessionService = inject(SessionService);
+  private router = inject(Router);
+
+  showErrorModal = signal(false);
+
+  errorMessage: string = '';
+  errorTitle: string = "Error eliminando el negocio";
+
+  constructor() {
+    this.loadBusinesses();
+  }
 
   createBusiness() {
-    console.log('Create new business');
-    // Add logic to create a new business
+    this.router.navigate(['/app/businesses/create']);
   }
 
-  deleteBusiness(id: string) {
-    this.businesses.update(businesses => 
-      businesses.filter(business => business.id !== id)
-    );
+  editBusiness(nit: string) {
+    this.router.navigate(['/app/businesses/edit', nit]);
   }
 
+  loadBusinesses() {
+    const user = this.sessionService.getCurrentUserValue();
+    if (user?.documentId) {
+      this.businessContext.loadBusinesses(user.documentId);
+    }
+  }
+
+  deleteBusiness(nit: string) {
+    this.businessProvider.deleteBusiness(nit).subscribe({
+      next: () => {
+        this.loadBusinesses();
+      },
+      error: (error) => {
+        this.showError(error);
+      }
+    })
+  }
+
+  showError(message: string): void {
+    this.errorMessage = message;
+    this.showErrorModal.set(true);
+  }
+
+  closeErrorModal(): void {
+    this.showErrorModal.set(false);
+    this.errorMessage = '';
+  }
 }

@@ -17,25 +17,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-color);
-  background-color: var(--surface-color);
+  border-bottom: none;
+  background-color: var(--sidebar-bg);
   padding: 0.75rem 2.5rem;
   position: sticky;
   top: 0;
   z-index: 50;
+  box-shadow: var(--shadow-md);
 }
 
 .header-brand {
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: var(--text-main);
+  color: var(--sidebar-text-bright);
 }
 
 .logo {
   width: 2rem;
   height: 2rem;
-  color: var(--primary);
+  color: #a5b4fc;
 
   .material-symbols-outlined {
     font-size: 32px;
@@ -43,7 +44,7 @@
 }
 
 .brand-title {
-  color: var(--text-main);
+  color: var(--sidebar-text-bright);
   font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -67,14 +68,14 @@
 }
 
 .nav-link {
-  color: var(--text-main);
+  color: var(--sidebar-text);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: color var(--transition-fast);
 
   &:hover {
-    color: var(--primary);
+    color: #a5b4fc;
   }
 }
 
@@ -89,17 +90,18 @@
   border-radius: 0.5rem;
   height: 2.5rem;
   padding: 0 1rem;
-  background-color: #1e88e5;
+  background-color: var(--primary);
   color: white;
   font-size: 0.875rem;
   font-weight: 700;
   line-height: 1.5;
   letter-spacing: 0.015em;
   border: none;
-  transition: background-color 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
-    background-color: rgba(30, 136, 229, 0.9);
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
   }
 }
 

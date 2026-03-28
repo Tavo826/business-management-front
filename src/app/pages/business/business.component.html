@@ -3,41 +3,63 @@
   <!-- Page Header -->
   <div class="page-header">
     <div class="header-text">
-      <h1 class="page-title">My Businesses</h1>
-      <p class="page-subtitle">Manage your business profiles and view key metrics.</p>
+      <h1 class="page-title">Mis negocios</h1>
+      <p class="page-subtitle">Gestiona tus perfiles de empresa y consulta las métricas clave.</p>
     </div>
     <button class="btn-create" (click)="createBusiness()">
       <span class="material-symbols-outlined">add</span>
-      <span>Create New Business</span>
+      <span>Crear Nuevo Negocio</span>
     </button>
   </div>
 
+  @if (businessContext.isLoading()) {
+  <div class="loading-container">
+    <span class="material-symbols-outlined loading-icon">progress_activity</span>
+    <p>Cargando negocios...</p>
+  </div>
+  } @else if (businessContext.businesses().length === 0) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined empty-icon">storefront</span>
+    <h3>No tienes negocios registrados</h3>
+    <p>Crea tu primer negocio para comenzar a gestionar tu empresa.</p>
+  </div>
+  } @else {
   <!-- Business Cards Grid -->
   <div class="business-grid">
-    @for (business of businesses(); track business.id) {
+    @for (business of businessContext.businesses(); track business.nit) {
     <div class="business-card">
-      <div class="business-image" [style.background-image]="'url(' + business.image + ')'">
+      <div class="business-icon-header">
+        <span class="material-symbols-outlined business-avatar">storefront</span>
       </div>
       <div class="business-info">
         <h3 class="business-name">{{ business.name }}</h3>
-        <p class="business-status" [class.status-active]="business.statusType === 'active'"
-          [class.status-complete]="business.statusType === 'complete'"
-          [class.status-reviews]="business.statusType === 'reviews'"
-          [class.status-inactive]="business.statusType === 'inactive'">
-          {{ business.status }}
+        <p class="business-detail">
+          <span class="material-symbols-outlined detail-icon">badge</span>
+          NIT: {{ business.nit }}
+        </p>
+        <p class="business-detail">
+          <span class="material-symbols-outlined detail-icon">phone</span>
+          {{ business.phone }}
+        </p>
+        <p class="business-detail">
+          <span class="material-symbols-outlined detail-icon">mail</span>
+          {{ business.email }}
         </p>
       </div>
       <div class="business-actions">
-        <button class="btn-action btn-edit">
+        <button class="btn-action btn-edit" (click)="editBusiness(business.nit)">
           <span class="material-symbols-outlined">edit</span>
-          <span>Edit</span>
+          <span>Editar</span>
         </button>
-        <button class="btn-action btn-delete" (click)="deleteBusiness(business.id)">
+        <button class="btn-action btn-delete" (click)="deleteBusiness(business.nit)">
           <span class="material-symbols-outlined">delete</span>
-          <span>Delete</span>
+          <span>Eliminar</span>
         </button>
       </div>
     </div>
     }
   </div>
+  }
+  <app-error [show]="showErrorModal()" [title]="errorTitle" [message]="errorMessage"
+  (close)="closeErrorModal()"></app-error>
 </main>

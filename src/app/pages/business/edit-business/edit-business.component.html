@@ -1,0 +1,334 @@
+<!-- Social Modal -->
+@if (showSocialModal()) {
+  <div class="modal-overlay">
+    <div class="modal-backdrop" (click)="closeSocialModal()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Agregar Red Social</h3>
+        <button (click)="closeSocialModal()" class="modal-close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-field">
+          <span class="field-label">Nombre de la Plataforma</span>
+          <input class="form-input"
+                 placeholder="ej. Facebook, Twitter, LinkedIn"
+                 [formControl]="socialMediaForm.controls.platformName" />
+          <div *ngIf="socialMediaForm.controls.platformName.touched && socialMediaForm.controls.platformName.errors"
+               class="validationError">
+            <div [hidden]="!socialMediaForm.controls.platformName.errors['required']">Plataforma es requerida</div>
+            <div [hidden]="!socialMediaForm.controls.platformName.errors['minlength']">Mínimo 3 caracteres</div>
+          </div>
+        </div>
+        <div class="form-field">
+          <span class="field-label">URL del Perfil</span>
+          <input class="form-input"
+                 placeholder="https://..."
+                 type="url"
+                 [formControl]="socialMediaForm.controls.url" />
+          <div *ngIf="socialMediaForm.controls.url.touched && socialMediaForm.controls.url.errors"
+               class="validationError">
+            <div [hidden]="!socialMediaForm.controls.url.errors['required']">URL es requerida</div>
+            <div [hidden]="!socialMediaForm.controls.url.errors['pattern']">Debe ser una URL válida (https://...)</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="closeSocialModal()" class="btn-secondary" type="button">Cancelar</button>
+        <button (click)="addSocialMedia()" class="btn-primary" type="button">Agregar</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Bank Modal -->
+@if (showBankModal()) {
+  <div class="modal-overlay">
+    <div class="modal-backdrop" (click)="closeBankModal()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Agregar Cuenta Bancaria</h3>
+        <button (click)="closeBankModal()" class="modal-close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-field">
+          <span class="field-label">Nombre del Banco</span>
+          <input class="form-input"
+                 placeholder="ej. Bancolombia, Davivienda"
+                 [formControl]="bankAccountForm.controls.name" />
+          <div *ngIf="bankAccountForm.controls.name.touched && bankAccountForm.controls.name.errors"
+               class="validationError">
+            <div [hidden]="!bankAccountForm.controls.name.errors['required']">Banco es requerido</div>
+            <div [hidden]="!bankAccountForm.controls.name.errors['minlength']">Mínimo 3 caracteres</div>
+          </div>
+        </div>
+        <div class="form-field">
+          <span class="field-label">Nombre del Titular</span>
+          <input class="form-input"
+                 placeholder="Nombre completo del titular"
+                 [formControl]="bankAccountForm.controls.accountHolder" />
+          <div *ngIf="bankAccountForm.controls.accountHolder.touched && bankAccountForm.controls.accountHolder.errors"
+               class="validationError">
+            <div [hidden]="!bankAccountForm.controls.accountHolder.errors['required']">Titular es requerido</div>
+            <div [hidden]="!bankAccountForm.controls.accountHolder.errors['minlength']">Mínimo 5 caracteres</div>
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-field">
+            <span class="field-label">Número de Cuenta</span>
+            <input class="form-input"
+                   placeholder="0000 0000 0000"
+                   [formControl]="bankAccountForm.controls.accountNumber" />
+            <div *ngIf="bankAccountForm.controls.accountNumber.touched && bankAccountForm.controls.accountNumber.errors"
+                 class="validationError">
+              <div [hidden]="!bankAccountForm.controls.accountNumber.errors['required']">Número es requerido</div>
+              <div [hidden]="!bankAccountForm.controls.accountNumber.errors['minlength']">Mínimo 10 caracteres</div>
+            </div>
+          </div>
+          <div class="form-field">
+            <span class="field-label">Tipo de Cuenta</span>
+            <select class="form-select" [formControl]="bankAccountForm.controls.accountType">
+              <option value="" disabled>Seleccionar...</option>
+              <option value="savings">Ahorros</option>
+              <option value="current">Corriente</option>
+            </select>
+            <div *ngIf="bankAccountForm.controls.accountType.touched && bankAccountForm.controls.accountType.errors"
+                 class="validationError">
+              <div [hidden]="!bankAccountForm.controls.accountType.errors['required']">Tipo de cuenta es requerido</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="closeBankModal()" class="btn-secondary" type="button">Cancelar</button>
+        <button (click)="addBankAccount()" class="btn-primary" type="button">Agregar</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Main Content -->
+@if (isLoading()) {
+  <div class="loading-container">
+    <span class="material-symbols-outlined loading-spinner">progress_activity</span>
+    <p>Cargando información del negocio...</p>
+  </div>
+} @else {
+<main class="edit-business-main">
+  <div class="content-wrapper">
+    <div class="page-header">
+      <h1 class="page-title">Editar Negocio</h1>
+      <p class="page-subtitle">Modifica la información de tu negocio.</p>
+    </div>
+
+    <form [formGroup]="businessForm">
+      <div class="form-card">
+        <!-- Business Information Section -->
+        <div class="card-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <span class="material-symbols-outlined">storefront</span>
+            </div>
+            <h3 class="section-title">Información del Negocio</h3>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field-wrapper full-width">
+              <label class="form-field">
+                <span class="field-label">Nombre del Negocio <span class="requiredStar">*</span></span>
+                <input class="form-input"
+                       placeholder="ej. Acme Corporation"
+                       [formControl]="businessForm.controls.businessName" />
+              </label>
+              <div *ngIf="businessForm.controls.businessName.errors && isSubmitted()"
+                   class="validationError">
+                <div [hidden]="!businessForm.controls.businessName.errors['required']">
+                  Nombre del negocio es requerido
+                </div>
+                <div [hidden]="!businessForm.controls.businessName.errors['minlength']">
+                  Nombre debe tener al menos 3 caracteres
+                </div>
+              </div>
+            </div>
+
+            <div class="form-field-wrapper">
+              <label class="form-field">
+                <span class="field-label">NIT <span class="requiredStar">*</span></span>
+                <input class="form-input"
+                       placeholder="ej. 123456789-0"
+                       [formControl]="businessForm.controls.nit" />
+              </label>
+              <div *ngIf="businessForm.controls.nit.errors && isSubmitted()"
+                   class="validationError">
+                <div [hidden]="!businessForm.controls.nit.errors['required']">NIT es requerido</div>
+                <div [hidden]="!businessForm.controls.nit.errors['minlength']">NIT debe tener al menos 9 caracteres</div>
+              </div>
+            </div>
+
+            <div class="form-field-wrapper">
+              <label class="form-field">
+                <span class="field-label">Teléfono del Negocio <span class="requiredStar">*</span></span>
+                <input class="form-input"
+                       placeholder="+57 (300) 000-0000"
+                       type="tel"
+                       [formControl]="businessForm.controls.businessPhone" />
+              </label>
+              <div *ngIf="businessForm.controls.businessPhone.errors && isSubmitted()"
+                   class="validationError">
+                <div [hidden]="!businessForm.controls.businessPhone.errors['required']">Teléfono es requerido</div>
+                <div [hidden]="!businessForm.controls.businessPhone.errors['minlength']">Teléfono debe tener al menos 10 caracteres</div>
+              </div>
+            </div>
+
+            <div class="form-field-wrapper full-width">
+              <label class="form-field">
+                <span class="field-label">Dirección del Negocio <span class="requiredStar">*</span></span>
+                <div class="input-with-icon">
+                  <input class="form-input"
+                         placeholder="Calle, Ciudad, Departamento"
+                         [formControl]="businessForm.controls.businessAddress" />
+                  <span class="material-symbols-outlined input-icon">location_on</span>
+                </div>
+              </label>
+              <div *ngIf="businessForm.controls.businessAddress.errors && isSubmitted()"
+                   class="validationError">
+                <div [hidden]="!businessForm.controls.businessAddress.errors['required']">Dirección es requerida</div>
+                <div [hidden]="!businessForm.controls.businessAddress.errors['minlength']">Dirección debe tener al menos 10 caracteres</div>
+              </div>
+            </div>
+
+            <div class="form-field-wrapper full-width">
+              <label class="form-field">
+                <span class="field-label">Correo Electrónico del Negocio <span class="requiredStar">*</span></span>
+                <input class="form-input"
+                       placeholder="contacto@negocio.com"
+                       type="email"
+                       [formControl]="businessForm.controls.businessEmail" />
+              </label>
+              <div *ngIf="businessForm.controls.businessEmail.errors && isSubmitted()"
+                   class="validationError">
+                <div [hidden]="!businessForm.controls.businessEmail.errors['required']">Correo electrónico es requerido</div>
+                <div [hidden]="!businessForm.controls.businessEmail.errors['email']">Correo electrónico debe ser válido</div>
+              </div>
+            </div>
+
+            <div class="form-field-wrapper full-width">
+              <label class="form-field">
+                <span class="field-label">Descripción del Negocio <span class="requiredStar">*</span></span>
+                <textarea class="form-textarea"
+                          placeholder="Describa brevemente las actividades y productos de su negocio..."
+                          [formControl]="businessForm.controls.businessDescription"></textarea>
+                <span class="field-hint">Mínimo 20 caracteres, máximo 500 caracteres.</span>
+              </label>
+              <div *ngIf="businessForm.controls.businessDescription.errors && isSubmitted()"
+                   class="validationError">
+                <div [hidden]="!businessForm.controls.businessDescription.errors['required']">Descripción es requerida</div>
+                <div [hidden]="!businessForm.controls.businessDescription.errors['minlength']">Descripción debe tener al menos 20 caracteres</div>
+                <div [hidden]="!businessForm.controls.businessDescription.errors['maxlength']">Descripción no debe exceder 500 caracteres</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Details Section -->
+        <div class="card-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <span class="material-symbols-outlined">add_circle</span>
+            </div>
+            <h3 class="section-title">
+              Detalles Adicionales
+              <span class="section-subtitle">(Opcional)</span>
+            </h3>
+          </div>
+
+          <div class="optional-grid">
+            <div class="optional-section">
+              <div class="optional-header">
+                <span class="field-label">Páginas de Redes Sociales</span>
+              </div>
+              <div class="optional-content">
+                @if (socialMediaList().length === 0) {
+                  <p class="empty-message">No se han agregado páginas de redes sociales aún.</p>
+                } @else {
+                  <div class="items-list">
+                    @for (social of socialMediaList(); track $index) {
+                      <div class="item-card">
+                        <div class="item-info">
+                          <span class="item-title">{{ social.platformName }}</span>
+                          <span class="item-subtitle">{{ social.url }}</span>
+                        </div>
+                        <button (click)="removeSocialMedia($index)" class="btn-remove" type="button">
+                          <span class="material-symbols-outlined">delete</span>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                }
+                <button (click)="openSocialModal()" class="btn-add" type="button">
+                  <span class="material-symbols-outlined btn-icon">add_link</span>
+                  <span class="btn-text">Agregar Página de Red Social</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="optional-section">
+              <div class="optional-header">
+                <span class="field-label">Cuentas Bancarias</span>
+              </div>
+              <div class="optional-content">
+                @if (bankAccountList().length === 0) {
+                  <p class="empty-message">No se han registrado cuentas bancarias aún.</p>
+                } @else {
+                  <div class="items-list">
+                    @for (account of bankAccountList(); track $index) {
+                      <div class="item-card">
+                        <div class="item-info">
+                          <span class="item-title">{{ account.name }}</span>
+                          <span class="item-subtitle">{{ account.accountHolder }} - {{ account.accountNumber }}</span>
+                        </div>
+                        <button (click)="removeBankAccount($index)" class="btn-remove" type="button">
+                          <span class="material-symbols-outlined">delete</span>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                }
+                <button (click)="openBankModal()" class="btn-add" type="button">
+                  <span class="material-symbols-outlined btn-icon">account_balance_wallet</span>
+                  <span class="btn-text">Agregar Cuenta Bancaria</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer">
+          <div class="footer-actions">
+            <button (click)="goBack()" class="btn-back" type="button">
+              <span class="material-symbols-outlined">arrow_back</span>
+              <span>Volver</span>
+            </button>
+            <button (click)="updateBusiness()" class="btn-complete" type="button" [disabled]="isSubmitted()">
+              @if (isSubmitted()) {
+                <span class="material-symbols-outlined loading-spinner">progress_activity</span>
+                <span>Guardando...</span>
+              } @else {
+                <span>Guardar Cambios</span>
+                <span class="material-symbols-outlined">save</span>
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+}
+
+<app-error [show]="showErrorModal()" [title]="errorTitle" [message]="errorMessage"
+  (close)="closeErrorModal()"></app-error>

@@ -45,13 +45,13 @@ export class HttpAuthProviderService {
         )
   }
 
-  public updateUser(id: string, model: FormData) {
+  public updateUser(id: string, model: User) : Observable<AuthTokenResponse> {
 
-    return this.http.put<User>(this.apiUrl + this.usersEndpoint + id, model,
+    return this.http.put<AuthTokenResponse>(this.apiUrl + this.usersEndpoint + id, model,
       this.sessionService.getAuthHeaders()
     )
     .pipe(
-      map((response: User) => response),
+      map((response: AuthTokenResponse) => this.sessionService.handleAuthentication(response)),
       catchError(this.sessionService.handleError)
     )
   }
