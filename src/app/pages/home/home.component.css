@@ -124,7 +124,7 @@
   }
 }
 
-.welcome-subtitle {
+.welcome-description {
   color: #CBD5E1;
   font-size: 1rem;
   font-weight: 400;
@@ -133,6 +133,11 @@
   @media (min-width: 768px) {
     font-size: 1.125rem;
   }
+}
+
+.welcome-emphasis {
+  color: #CBD5E1;
+  font-weight: 700;
 }
 
 .panel-actions {
