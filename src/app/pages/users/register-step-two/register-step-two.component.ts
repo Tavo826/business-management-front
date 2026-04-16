@@ -190,7 +190,8 @@ export class RegisterStepTwoComponent {
     this.httpBusinessProvider.registerBusiness(business).subscribe({
       next: () => {
         this.isSubmitted.set(false);
-        this.router.navigate(['/app/dashboard']);
+        this.registrationService.clearRegistrationData();
+        this.router.navigate(['/register/complete']);
       },
       error: (error) => {
         this.showError(error);

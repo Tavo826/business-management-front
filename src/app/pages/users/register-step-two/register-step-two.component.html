@@ -148,7 +148,7 @@
                 <label class="form-field">
                   <span class="field-label">Teléfono del Negocio <span class="requiredStar">*</span></span>
                   <input class="form-input" 
-                         placeholder="+57 (300) 000-0000" 
+                         placeholder="3119999999" 
                          type="tel" 
                          [formControl]="registrationFormTwo.controls.businessPhone"/>
                 </label>
@@ -304,8 +304,7 @@
           <div class="card-footer">
             <p class="terms-text">
               Al hacer clic en "Completar Registro", usted acepta nuestros
-              <a class="link-primary">Términos</a> y 
-              <a class="link-primary">Política de Privacidad</a>.
+              <a class="link-primary" routerLink="/privacy-policy">Términos y Política de Privacidad</a>.
             </p>
             <div class="footer-actions">
               <button routerLink="/register/step-one" class="btn-back" type="button">

@@ -9,6 +9,7 @@ export interface Business {
   email: string;
   description: string;
   ownerDocumentId?: string;
+  phoneNumberId?: string;
   socialMediaList?: SocialMedia[];
   bankAccountList?: BankAccount[];
   createdAt?: Date;

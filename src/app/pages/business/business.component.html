@@ -51,7 +51,7 @@
           <span class="material-symbols-outlined">edit</span>
           <span>Editar</span>
         </button>
-        <button class="btn-action btn-delete" (click)="deleteBusiness(business.nit)">
+        <button class="btn-action btn-delete" (click)="requestDeleteBusiness(business.nit)">
           <span class="material-symbols-outlined">delete</span>
           <span>Eliminar</span>
         </button>
@@ -62,4 +62,11 @@
   }
   <app-error [show]="showErrorModal()" [title]="errorTitle" [message]="errorMessage"
   (close)="closeErrorModal()"></app-error>
+  <app-confirm
+    [show]="showConfirmModal()"
+    title="Eliminar Negocio"
+    message="¿Estás seguro de que deseas eliminar este negocio? Esta acción es permanente y no se puede deshacer."
+    (confirm)="confirmDeleteBusiness()"
+    (cancel)="cancelDelete()">
+  </app-confirm>
 </main>
