@@ -106,7 +106,7 @@
               Eliminar permanentemente tu cuenta y todo su contenido. Esta acción no es reversible.
             </p>
           </div>
-          <button class="btn-delete" type="button" (click)="deleteAccount()">
+          <button class="btn-delete" type="button" (click)="requestDeleteAccount()">
             <span class="truncate">Eliminar Cuenta</span>
           </button>
         </div>
@@ -116,3 +116,10 @@
 </div>
 <app-error [show]="showErrorModal()" [title]="errorTitle" [message]="errorMessage"
   (close)="closeErrorModal()"></app-error>
+<app-confirm
+  [show]="showConfirmModal()"
+  title="Eliminar Cuenta"
+  message="¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es permanente y no se puede deshacer."
+  (confirm)="confirmDeleteAccount()"
+  (cancel)="cancelDelete()">
+</app-confirm>

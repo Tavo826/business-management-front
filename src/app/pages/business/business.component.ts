@@ -5,11 +5,12 @@ import { BusinessContextService } from '../../services/business-context.service'
 import { SessionService } from '../../shared/session/session.service';
 import { HttpBusinessProviderService } from '../../services/http-business-provider.service';
 import { ErrorComponent } from '../../components/error/error.component';
+import { ConfirmComponent } from '../../components/confirm/confirm.component';
 
 @Component({
   selector: 'app-business',
   standalone: true,
-  imports: [CommonModule, ErrorComponent],
+  imports: [CommonModule, ErrorComponent, ConfirmComponent],
   templateUrl: './business.component.html',
   styleUrl: './business.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,6 +23,8 @@ export class BusinessComponent {
   private router = inject(Router);
 
   showErrorModal = signal(false);
+  showConfirmModal = signal(false);
+  businessToDelete: string | null = null;
 
   errorMessage: string = '';
   errorTitle: string = "Error eliminando el negocio";
@@ -45,15 +48,30 @@ export class BusinessComponent {
     }
   }
 
-  deleteBusiness(nit: string) {
-    this.businessProvider.deleteBusiness(nit).subscribe({
-      next: () => {
-        this.loadBusinesses();
-      },
-      error: (error) => {
-        this.showError(error);
-      }
-    })
+  requestDeleteBusiness(nit: string) {
+    this.businessToDelete = nit;
+    this.showConfirmModal.set(true);
+  }
+
+  confirmDeleteBusiness() {
+    this.showConfirmModal.set(false);
+    if (this.businessToDelete) {
+      this.businessProvider.deleteBusiness(this.businessToDelete).subscribe({
+        next: () => {
+          this.businessToDelete = null;
+          this.loadBusinesses();
+        },
+        error: (error) => {
+          this.businessToDelete = null;
+          this.showError(error);
+        }
+      })
+    }
+  }
+
+  cancelDelete() {
+    this.showConfirmModal.set(false);
+    this.businessToDelete = null;
   }
 
   showError(message: string): void {

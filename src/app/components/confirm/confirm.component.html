@@ -1,0 +1,35 @@
+@if (show) {
+  <div class="modal-overlay active" (click)="onCancel()">
+    <div class="modal-confirm" (click)="stopPropagation($event)">
+      <div class="modal-header">
+        <div class="warn-icon-container">
+          <svg class="warn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h2 class="modal-title">{{ title }}</h2>
+        <button class="btn-close" (click)="onCancel()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="confirm-text">{{ message }}</p>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()">
+          Cancelar
+        </button>
+        <button type="button" class="btn-danger" (click)="onConfirm()">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+}
