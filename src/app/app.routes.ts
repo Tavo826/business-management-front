@@ -20,7 +20,8 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'step-one', pathMatch: 'full' },
             { path: 'step-one', loadComponent: () => import('./pages/users/register-step-one/register-step-one.component').then(m => m.RegisterStepOneComponent), canActivate: [NoAuthGuard] },
-            { path: 'step-two', loadComponent: () => import('./pages/users/register-step-two/register-step-two.component').then(m => m.RegisterStepTwoComponent), canActivate: [NoAuthGuard] }
+            { path: 'step-two', loadComponent: () => import('./pages/users/register-step-two/register-step-two.component').then(m => m.RegisterStepTwoComponent), canActivate: [NoAuthGuard] },
+            { path: 'complete', loadComponent: () => import('./pages/users/registration-complete/registration-complete.component').then(m => m.RegistrationCompleteComponent) }
         ]
     },
     {

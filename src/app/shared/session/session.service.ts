@@ -76,8 +76,6 @@ export class SessionService {
   handleLoginError (error: any) {
     let errorMessage = "An error ocurred in the request"
 
-    console.log(error)
-
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`
     } else if (error.status) {

@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { LoginRequest } from '../../interfaces/auth.models';
 import { HttpAuthProviderService } from '../../services/http-auth-provider.service';
+import { HttpBusinessProviderService } from '../../services/http-business-provider.service';
+import { SessionService } from '../../shared/session/session.service';
 import { ErrorComponent } from '../../components/error/error.component';
 
 @Component({
@@ -20,6 +22,8 @@ export class HomeComponent {
 
   private readonly formBuilder = inject(FormBuilder)
   private readonly httpAuthProvider = inject(HttpAuthProviderService);
+  private readonly httpBusinessProvider = inject(HttpBusinessProviderService);
+  private readonly sessionService = inject(SessionService);
 
   showPassword = signal(false);
   showErrorModal = signal(false);
@@ -52,15 +56,34 @@ export class HomeComponent {
         this.loginForm.get(key)?.markAsTouched();
       });
     }
-
-    this.router.navigate(['/app/dashboard']);
   }
 
   loginUser(login: LoginRequest) {
     this.httpAuthProvider.logUser(login).subscribe({
       next: () => {
+        this.resolvePostLoginRoute();
+      },
+      error: (error) => {
+        this.showError(error);
         this.isSubmitted = false;
-        this.router.navigate(['/app/dashboard']);
+      }
+    });
+  }
+
+  private resolvePostLoginRoute() {
+    const userId = this.sessionService.getCurrentUserValue()?.documentId;
+
+    if (!userId) {
+      this.isSubmitted = false;
+      this.router.navigate(['/register/complete']);
+      return;
+    }
+
+    this.httpBusinessProvider.getBusinessListByUserId(userId).subscribe({
+      next: (businesses) => {
+        this.isSubmitted = false;
+        const activated = businesses?.some(b => b.phoneNumberId && b.phoneNumberId !== "0");
+        this.router.navigate([activated ? '/app/dashboard' : '/register/complete']);
       },
       error: (error) => {
         this.showError(error);

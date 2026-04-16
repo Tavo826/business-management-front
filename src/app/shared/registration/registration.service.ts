@@ -51,6 +51,12 @@ export class RegistrationService {
     localStorage.setItem(this.bankAccountsKey, JSON.stringify(data));
   }
 
+  setPhoneNumberId(phoneNumberId: string) {
+    const businessData = this.getBusinessFromStorage() || {};
+    businessData.phoneNumberId = phoneNumberId;
+    this.setBusinessInfo(businessData);
+  }
+
   isStepOneComplete(): boolean {
     return this.getUserFromStorage() !== null;
   }

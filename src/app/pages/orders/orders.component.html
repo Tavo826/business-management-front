@@ -1,49 +1,47 @@
 <div class="orders-container">
-  <!-- Main Content -->
   <main class="orders-main">
     <div class="content-container">
       <!-- Page Heading -->
       <div class="page-header">
-        <p class="page-title">Product Orders</p>
-        <button class="btn-new-order">
-          <span class="material-symbols-outlined">add_circle</span>
-          <span class="truncate">New Order</span>
-        </button>
+        <p class="page-title">Órdenes de Producto</p>
       </div>
+
+      @if (isLoading()) {
+      <div class="loading-container">
+        <span class="material-symbols-outlined loading-icon">progress_activity</span>
+        <p>Cargando órdenes...</p>
+      </div>
+      } @else {
 
       <!-- Search and Filter Bar -->
       <div class="filter-bar">
-        <!-- Search Bar -->
         <div class="search-wrapper">
           <label class="search-label">
             <div class="search-container">
               <div class="search-icon-wrapper">
                 <span class="material-symbols-outlined">search</span>
               </div>
-              <input class="search-input" placeholder="Search by Order ID, Product, or Customer..." value="" />
+              <input class="search-input" placeholder="Buscar por ID, producto o cliente..." (input)="onSearch($event)" />
             </div>
           </label>
         </div>
 
-        <!-- Filter Chips -->
         <div class="filter-chips">
-          <button class="chip active">
-            <p class="chip-text">All</p>
+          @for (filter of filters; track filter) {
+          <button class="chip" [class.active]="activeFilter() === filter" (click)="setFilter(filter)">
+            <p class="chip-text">{{ filter }}</p>
           </button>
-          <button class="chip">
-            <p class="chip-text">Processing</p>
-          </button>
-          <button class="chip">
-            <p class="chip-text">Shipped</p>
-          </button>
-          <button class="chip">
-            <p class="chip-text">Delivered</p>
-          </button>
-          <button class="chip">
-            <p class="chip-text">Canceled</p>
-          </button>
+          }
         </div>
       </div>
+
+      @if (filteredOrders().length === 0) {
+      <div class="empty-state">
+        <span class="material-symbols-outlined empty-icon">receipt_long</span>
+        <h3>No se encontraron órdenes</h3>
+        <p>No hay órdenes que coincidan con los filtros seleccionados.</p>
+      </div>
+      } @else {
 
       <!-- Orders Table -->
       <div class="table-wrapper">
@@ -51,31 +49,36 @@
           <table class="orders-table">
             <thead>
               <tr class="table-header-row">
-                <th class="table-header">Order ID</th>
-                <th class="table-header">Product</th>
-                <th class="table-header">Customer</th>
-                <th class="table-header">Date</th>
+                <th class="table-header">ID</th>
+                <th class="table-header">Cliente</th>
+                <th class="table-header">Productos</th>
+                <th class="table-header">Fecha</th>
                 <th class="table-header">Total</th>
-                <th class="table-header">Status</th>
-                <th class="table-header">Actions</th>
+                <th class="table-header">Estado</th>
+                <th class="table-header">Acciones</th>
               </tr>
             </thead>
             <tbody class="table-body">
-              @for (order of dataService.orders(); track order.id) {
+              @for (order of filteredOrders(); track order.id) {
               <tr class="table-row">
-                <td class="table-cell order-id">{{ order.id }}</td>
+                <td class="table-cell order-id">{{ order.id.slice(0, 8) }}...</td>
                 <td class="table-cell">
-                  <div class="product-cell">
-                    <div class="product-image" [style.background-image]="'url(' + order.productImage + ')'">
-                    </div>
-                    <span class="product-name">{{ order.productName }}</span>
+                  <div class="customer-cell">
+                    <span class="customer-name">{{ order.customerName }}</span>
+                    <span class="customer-phone">{{ order.customerPhone }}</span>
                   </div>
                 </td>
-                <td class="table-cell">{{ order.customer }}</td>
-                <td class="table-cell">{{ order.date }}</td>
-                <td class="table-cell total">{{ order.total }}</td>
                 <td class="table-cell">
-                  <span class="status-badge" [class.status-shipped]="order.status === 'Shipped'"
+                  <div class="product-cell">
+                    <span class="product-name">{{ getItemsSummary(order.items) }}</span>
+                    <span class="product-qty">{{ getItemsCount(order.items) }} unidades</span>
+                  </div>
+                </td>
+                <td class="table-cell">{{ formatDate(order.createdAt) }}</td>
+                <td class="table-cell total">{{ formatCurrency(order.totalAmount) }}</td>
+                <td class="table-cell">
+                  <span class="status-badge"
+                    [class.status-shipped]="order.status === 'Shipped'"
                     [class.status-delivered]="order.status === 'Delivered'"
                     [class.status-processing]="order.status === 'Processing'"
                     [class.status-canceled]="order.status === 'Canceled'">
@@ -83,8 +86,8 @@
                   </span>
                 </td>
                 <td class="table-cell">
-                  <button class="action-button">
-                    <span class="material-symbols-outlined">more_vert</span>
+                  <button class="btn-edit-action" (click)="openEditModal(order)">
+                    <span class="material-symbols-outlined">edit</span>
                   </button>
                 </td>
               </tr>
@@ -94,14 +97,96 @@
         </div>
       </div>
 
-      <!-- Pagination -->
       <div class="pagination">
-        <span class="pagination-info">Showing 1 to 5 of 20 results</span>
-        <div class="pagination-buttons">
-          <button class="pagination-button">Previous</button>
-          <button class="pagination-button">Next</button>
-        </div>
+        <span class="pagination-info">Mostrando {{ filteredOrders().length }} de {{ orders().length }} resultados</span>
       </div>
+
+      }
+      }
     </div>
   </main>
 </div>
+
+<!-- Edit Order Modal -->
+@if (showEditModal()) {
+<div class="modal-overlay active" (click)="closeEditModal()">
+  <div class="modal-edit" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-icon-container">
+        <span class="material-symbols-outlined modal-icon">edit_note</span>
+      </div>
+      <h2 class="modal-title">Editar Orden</h2>
+      <button class="btn-close" (click)="closeEditModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form class="edit-form" [formGroup]="orderForm">
+        <div class="form-field">
+          <label class="field-label" for="customerName">Nombre del Cliente</label>
+          <input class="form-input" id="customerName" type="text" formControlName="customerName" />
+          @if (orderForm.controls.customerName.touched && orderForm.controls.customerName.errors) {
+          <span class="validation-error">Nombre del cliente es requerido</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="customerPhone">Teléfono</label>
+          <input class="form-input" id="customerPhone" type="text" formControlName="customerPhone" />
+          @if (orderForm.controls.customerPhone.touched && orderForm.controls.customerPhone.errors) {
+          <span class="validation-error">Teléfono es requerido</span>
+          }
+        </div>
+
+        <div class="form-field full-width">
+          <label class="field-label" for="customerAddress">Dirección</label>
+          <input class="form-input" id="customerAddress" type="text" formControlName="customerAddress" />
+          @if (orderForm.controls.customerAddress.touched && orderForm.controls.customerAddress.errors) {
+          <span class="validation-error">Dirección es requerida</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="status">Estado</label>
+          <select class="form-input form-select" id="status" formControlName="status">
+            @for (status of statuses; track status) {
+            <option [value]="status">{{ status }}</option>
+            }
+          </select>
+        </div>
+      </form>
+
+      <!-- Order Items Summary -->
+      @if (editingOrder(); as order) {
+      <div class="items-summary">
+        <h3 class="items-title">Productos de la Orden</h3>
+        <div class="items-list">
+          @for (item of order.items; track item.productName) {
+          <div class="item-row">
+            <div class="item-info">
+              <span class="item-name">{{ item.productName }}</span>
+              <span class="item-detail">{{ item.quantity }} x {{ formatCurrency(item.unitPrice) }}</span>
+            </div>
+            <span class="item-total">{{ formatCurrency(item.quantity * item.unitPrice) }}</span>
+          </div>
+          }
+        </div>
+        <div class="items-total-row">
+          <span class="items-total-label">Total</span>
+          <span class="items-total-value">{{ formatCurrency(order.totalAmount) }}</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" (click)="closeEditModal()">Cancelar</button>
+      <button type="button" class="btn-save" (click)="saveOrder()">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+}
+
+<app-error [show]="showErrorModal()" [title]="errorTitle" [message]="errorMessage"
+  (close)="closeErrorModal()"></app-error>

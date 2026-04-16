@@ -5,12 +5,13 @@ import { CommonModule, NgIf } from '@angular/common';
 import { HttpAuthProviderService } from '../../../services/http-auth-provider.service';
 import { User } from '../../../interfaces/user.models';
 import { ErrorComponent } from '../../../components/error/error.component';
+import { ConfirmComponent } from '../../../components/confirm/confirm.component';
 
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NgIf, ErrorComponent],
+  imports: [ReactiveFormsModule, CommonModule, NgIf, ErrorComponent, ConfirmComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +24,7 @@ export class ProfileComponent {
 
   isSubmitted: boolean = false
   showErrorModal = signal(false);
+  showConfirmModal = signal(false);
   user: User | null = null;
 
   errorMessage: string = '';
@@ -75,7 +77,12 @@ export class ProfileComponent {
     })
   }
 
-  deleteAccount() {
+  requestDeleteAccount() {
+    this.showConfirmModal.set(true);
+  }
+
+  confirmDeleteAccount() {
+    this.showConfirmModal.set(false);
     this.registrationService.deleteUser(this.user?.documentId!).subscribe({
       next: () => {
         this.sessionService.logout();
@@ -85,6 +92,10 @@ export class ProfileComponent {
         this.isSubmitted = false;
       }
     })
+  }
+
+  cancelDelete() {
+    this.showConfirmModal.set(false);
   }
 
   loadActualUser() {
