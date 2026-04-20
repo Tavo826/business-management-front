@@ -39,7 +39,7 @@ export class HttpOrdersProviderService {
   }
 
   public updateOrder(id: string, model: Partial<Order>) {
-    return this.http.patch<Order>(this.apiUrl + this.ordersEndpoint + id + "/status", model,
+    return this.http.put<Order>(this.apiUrl + this.ordersEndpoint + id, model,
       this.sessionService.getAuthHeaders()
     )
       .pipe(

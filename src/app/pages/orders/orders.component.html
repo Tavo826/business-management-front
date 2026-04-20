@@ -78,10 +78,9 @@
                 <td class="table-cell total">{{ formatCurrency(order.totalAmount) }}</td>
                 <td class="table-cell">
                   <span class="status-badge"
-                    [class.status-shipped]="order.status === 'Shipped'"
-                    [class.status-delivered]="order.status === 'Delivered'"
-                    [class.status-processing]="order.status === 'Processing'"
-                    [class.status-canceled]="order.status === 'Canceled'">
+                    [class.status-shipped]="order.status === 'CONFIRMED'"
+                    [class.status-processing]="order.status === 'PENDING'"
+                    [class.status-canceled]="order.status === 'CANCELED'">
                     {{ order.status }}
                   </span>
                 </td>
