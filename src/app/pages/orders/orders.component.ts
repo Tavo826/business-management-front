@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BusinessContextService } from '../../services/business-context.service';
 import { HttpOrdersProviderService } from '../../services/http-orders-provider.service';
@@ -38,8 +38,8 @@ export class OrdersComponent {
     status: ['', [Validators.required]]
   });
 
-  statuses = ["PENDING", "CONFIRMED"];
-  filters = ['All', ...['Processing', 'Shipped', 'Delivered', 'Canceled']];
+  statuses = ["PENDING", "CONFIRMED", "CANCELED"];
+  filters = ['All', ...['Pending', 'Confirmed', 'Canceled']];
 
   filteredOrders = computed(() => {
     let result = this.orders();
@@ -47,7 +47,7 @@ export class OrdersComponent {
     const filter = this.activeFilter();
 
     if (filter !== 'All') {
-      result = result.filter(o => o.status === filter);
+      result = result.filter(o => o.status.toLowerCase() === filter.toLowerCase());
     }
 
     if (search) {
@@ -62,7 +62,12 @@ export class OrdersComponent {
   });
 
   constructor() {
-    this.loadOrders();
+    effect(() => {
+      const business = this.businessContext.activeBusiness();
+      if (business) {
+        this.loadOrders();
+      }
+    });
   }
 
   loadOrders() {
