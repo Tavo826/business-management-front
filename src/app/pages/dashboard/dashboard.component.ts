@@ -1,20 +1,14 @@
-import { ChangeDetectionStrategy, Component, signal, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject, computed, effect } from '@angular/core';
 import { BusinessContextService } from '../../services/business-context.service';
+import { HttpOrdersProviderService } from '../../services/http-orders-provider.service';
+import { Order } from '../../interfaces/order.model';
 import { CommonModule } from '@angular/common';
-
-interface User {
-  name: string;
-  role: string;
-  avatar: string;
-}
 
 interface Metric {
   title: string;
   value: string;
   icon: string;
   colorClass: string;
-  change: string;
-  isPositive: boolean;
 }
 
 interface ChartBar {
@@ -22,14 +16,14 @@ interface ChartBar {
   heightPercentage: number;
 }
 
-interface Client {
+interface ClientSummary {
   name: string;
   initials: string;
   detail: string;
   amount: string;
 }
 
-interface Order {
+interface RecentOrder {
   id: string;
   client: string;
   date: string;
@@ -45,102 +39,171 @@ interface Order {
   styleUrl: './dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
-
-
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
 
   businessContext = inject(BusinessContextService);
+  private ordersProvider = inject(HttpOrdersProviderService);
 
+  orders = signal<Order[]>([]);
   isLoading = signal<boolean>(true);
+  currentYear = new Date().getFullYear();
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.isLoading.set(false);
-    }, 1500);
+  constructor() {
+    effect(() => {
+      const business = this.businessContext.activeBusiness();
+      if (business) {
+        this.loadOrders(business.nit);
+      } else if (!this.businessContext.isLoading()) {
+        this.orders.set([]);
+        this.isLoading.set(false);
+      }
+    });
   }
 
-  currentUser = signal<User>({
-    name: 'Marielo',
-    role: 'Personal Account',
-    avatar: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop'
+  private loadOrders(businessId: string): void {
+    this.isLoading.set(true);
+    this.ordersProvider.getOrdersByBusinessId(businessId).subscribe({
+      next: (orders) => {
+        this.orders.set(orders ?? []);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.orders.set([]);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  metrics = computed<Metric[]>(() => {
+    const orders = this.orders();
+    const confirmed = orders.filter(o => this.normalizeStatus(o.status) === 'CONFIRMED');
+    const pending = orders.filter(o => this.normalizeStatus(o.status) === 'PENDING');
+    const totalRevenue = confirmed.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+    const uniqueClients = new Set(
+      orders.map(o => o.customerPhone || o.customerName).filter(Boolean)
+    ).size;
+    const conversionRate = orders.length === 0 ? 0 : (confirmed.length / orders.length) * 100;
+
+    return [
+      { title: 'Ingresos Totales', value: this.formatCurrency(totalRevenue), icon: 'payments', colorClass: 'bg-blue' },
+      { title: 'Órdenes Pendientes', value: String(pending.length), icon: 'shopping_cart', colorClass: 'bg-green' },
+      { title: 'Clientes Totales', value: String(uniqueClients), icon: 'group', colorClass: 'bg-orange' },
+      { title: 'Tasa de Conversión', value: conversionRate.toFixed(1) + '%', icon: 'trending_up', colorClass: 'bg-purple' }
+    ];
   });
 
-  metrics = signal<Metric[]>([
-    {
-      title: 'Total Revenue',
-      value: '$45,231',
-      icon: 'payments',
-      colorClass: 'bg-blue',
-      change: '+12.5%',
-      isPositive: true
-    },
-    {
-      title: 'Active Orders',
-      value: '152',
-      icon: 'shopping_cart',
-      colorClass: 'bg-green',
-      change: '+8.2%',
-      isPositive: true
-    },
-    {
-      title: 'Total Clients',
-      value: '1,234',
-      icon: 'group',
-      colorClass: 'bg-orange',
-      change: '+4.3%',
-      isPositive: true
-    },
-    {
-      title: 'Conversion Rate',
-      value: '3.24%',
-      icon: 'trending_up',
-      colorClass: 'bg-purple',
-      change: '-0.5%',
-      isPositive: false
+  chartData = computed<ChartBar[]>(() => {
+    const orders = this.orders();
+    const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const currentYear = new Date().getFullYear();
+    const totals = new Array(12).fill(0);
+
+    for (const o of orders) {
+      if (!o.createdAt) continue;
+      if (this.normalizeStatus(o.status) !== 'CONFIRMED') continue;
+      const date = new Date(o.createdAt);
+      if (date.getFullYear() !== currentYear) continue;
+      totals[date.getMonth()] += (o.totalAmount || 0);
     }
-  ]);
 
-  chartData = signal<ChartBar[]>([
-    { month: 'Jan', heightPercentage: 45 },
-    { month: 'Feb', heightPercentage: 62 },
-    { month: 'Mar', heightPercentage: 78 },
-    { month: 'Apr', heightPercentage: 55 },
-    { month: 'May', heightPercentage: 85 },
-    { month: 'Jun', heightPercentage: 72 },
-    { month: 'Jul', heightPercentage: 90 },
-    { month: 'Aug', heightPercentage: 68 },
-    { month: 'Sep', heightPercentage: 95 },
-    { month: 'Oct', heightPercentage: 100 },
-    { month: 'Nov', heightPercentage: 82 },
-    { month: 'Dec', heightPercentage: 75 }
-  ]);
+    const max = Math.max(...totals, 1);
+    return months.map((m, i) => ({
+      month: m,
+      heightPercentage: Math.max(Math.round((totals[i] / max) * 100), totals[i] > 0 ? 5 : 0)
+    }));
+  });
 
-  topClients = signal<Client[]>([
-    { name: 'Acme Corporation', initials: 'AC', detail: '24 orders', amount: '$12,450' },
-    { name: 'TechStart Inc.', initials: 'TI', detail: '18 orders', amount: '$9,230' },
-    { name: 'Global Solutions', initials: 'GS', detail: '15 orders', amount: '$7,890' },
-    { name: 'Digital Ventures', initials: 'DV', detail: '12 orders', amount: '$6,540' }
-  ]);
+  topClients = computed<ClientSummary[]>(() => {
+    const orders = this.orders();
+    const map = new Map<string, { name: string; count: number; amount: number }>();
 
-  recentOrders = signal<Order[]>([
-    { id: '#ORD-2024-001', client: 'John Smith', date: 'Oct 28, 2023', status: 'Completed', amount: '$1,234.00' },
-    { id: '#ORD-2024-002', client: 'Sarah Johnson', date: 'Oct 27, 2023', status: 'Processing', amount: '$856.50' },
-    { id: '#ORD-2024-003', client: 'Michael Brown', date: 'Oct 27, 2023', status: 'Pending', amount: '$2,145.00' },
-    { id: '#ORD-2024-004', client: 'Emily Davis', date: 'Oct 26, 2023', status: 'Completed', amount: '$678.25' },
-    { id: '#ORD-2024-005', client: 'David Wilson', date: 'Oct 25, 2023', status: 'Processing', amount: '$1,890.00' }
-  ]);
+    for (const o of orders) {
+      const key = o.customerPhone || o.customerName;
+      if (!key) continue;
+      const current = map.get(key) || { name: o.customerName, count: 0, amount: 0 };
+      current.count += 1;
+      current.amount += (o.totalAmount || 0);
+      map.set(key, current);
+    }
+
+    return Array.from(map.values())
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 4)
+      .map(c => ({
+        name: c.name,
+        initials: this.getInitials(c.name),
+        detail: c.count + (c.count === 1 ? ' orden' : ' órdenes'),
+        amount: this.formatCurrency(c.amount)
+      }));
+  });
+
+  returningRate = computed<number>(() => {
+    const orders = this.orders();
+    const counts = new Map<string, number>();
+    for (const o of orders) {
+      const key = o.customerPhone || o.customerName;
+      if (!key) continue;
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+    if (counts.size === 0) return 0;
+    const returning = Array.from(counts.values()).filter(c => c > 1).length;
+    return Math.round((returning / counts.size) * 100);
+  });
+
+  recentOrders = computed<RecentOrder[]>(() => {
+    return [...this.orders()]
+      .sort((a, b) => {
+        const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return db - da;
+      })
+      .slice(0, 5)
+      .map(o => ({
+        id: o.id,
+        client: o.customerName,
+        date: this.formatDate(o.createdAt),
+        status: this.capitalize(o.status),
+        amount: this.formatCurrency(o.totalAmount || 0)
+      }));
+  });
 
   getMetricBgClass(colorClass: string): string {
     return colorClass;
   }
 
   getStatusClasses(status: string): string {
-    const statusLower = status.toLowerCase();
-    if (statusLower === 'completed') return 'completed';
-    if (statusLower === 'processing') return 'processing';
-    if (statusLower === 'pending') return 'pending';
+    const s = this.normalizeStatus(status);
+    if (s === 'CONFIRMED') return 'completed';
+    if (s === 'PENDING') return 'pending';
+    if (s === 'CANCELED') return 'processing';
     return '';
   }
 
+  private normalizeStatus(status: string): string {
+    return (status || '').toUpperCase();
+  }
+
+  private getInitials(name: string): string {
+    if (!name) return '?';
+    const parts = name.trim().split(/\s+/);
+    return ((parts[0]?.[0] || '') + (parts[1]?.[0] || '')).toUpperCase() || '?';
+  }
+
+  private capitalize(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  private formatCurrency(amount: number): string {
+    return '$' + amount.toLocaleString('es-CO', { minimumFractionDigits: 0 });
+  }
+
+  private formatDate(date?: Date): string {
+    if (!date) return '—';
+    return new Date(date).toLocaleDateString('es-CO', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
 }
