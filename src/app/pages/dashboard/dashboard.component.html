@@ -6,20 +6,10 @@
       <div class="page-header">
         <div class="header-info">
           <div class="business-badge">
-            <span class="badge">Active Business</span>
+            <span class="badge">Negocio activo</span>
           </div>
           <h2 class="business-title">{{ businessContext.activeBusinessName() || 'No business selected' }}</h2>
-          <p class="business-subtitle">Dashboard overview for the last 30 days.</p>
-        </div>
-        <div class="header-actions">
-          <button class="btn-secondary">
-            <span class="material-symbols-outlined">calendar_today</span>
-            <span>Oct 1 - Oct 31, 2023</span>
-          </button>
-          <button class="btn-primary">
-            <span class="material-symbols-outlined">file_download</span>
-            <span>Export Data</span>
-          </button>
+          <p class="business-subtitle">Información general de tu negocio</p>
         </div>
       </div>
 
@@ -32,9 +22,6 @@
             <div class="metric-icon" [class]="getMetricBgClass(metric.colorClass)">
               <span class="material-symbols-outlined">{{ metric.icon }}</span>
             </div>
-            <span class="metric-change" [class.positive]="metric.isPositive" [class.negative]="!metric.isPositive">
-              {{ metric.change }}
-            </span>
           </div>
           <p class="metric-title">{{ metric.title }}</p>
           <p class="metric-value">{{ metric.value }}</p>
@@ -47,12 +34,8 @@
         <!-- Order History Trends -->
         <div class="chart-card">
           <div class="chart-header">
-            <h3 class="chart-title">Order History Trends</h3>
-            <select class="chart-select">
-              <option>Weekly</option>
-              <option selected>Monthly</option>
-              <option>Yearly</option>
-            </select>
+            <h3 class="chart-title">Ingresos por Mes</h3>
+            <span class="chart-subtitle">{{ currentYear }}</span>
           </div>
           <div class="bar-chart">
             @for (bar of chartData(); track bar.month) {
@@ -69,25 +52,27 @@
         <!-- Client Insights -->
         <div class="insights-card">
           <div class="insights-header">
-            <h3 class="insights-title">Client Insights</h3>
-            <button class="view-all-btn">View All</button>
+            <h3 class="insights-title">Clientes</h3>
           </div>
           <div class="insights-content">
             <!-- Progress Bar -->
             <div class="progress-section">
               <div class="progress-header">
-                <span class="progress-label">New vs Returning Customers</span>
-                <span class="progress-value">65% Returning</span>
+                <span class="progress-label">Nuevos vs Recurrentes</span>
+                <span class="progress-value">{{ returningRate() }}% recurrentes</span>
               </div>
               <div class="progress-bar-container">
-                <div class="progress-bar-fill returning"></div>
-                <div class="progress-bar-fill new"></div>
+                <div class="progress-bar-fill returning" [style.width.%]="returningRate()"></div>
+                <div class="progress-bar-fill new" [style.width.%]="100 - returningRate()"></div>
               </div>
             </div>
 
             <!-- Top Clients List -->
             <div class="clients-section">
-              <h4 class="clients-label">Top Clients</h4>
+              <h4 class="clients-label">Mejores Clientes</h4>
+              @if (topClients().length === 0) {
+                <p class="empty-state">Aún no hay clientes registrados.</p>
+              }
               <div class="clients-list">
                 @for (client of topClients(); track client.name) {
                 <div class="client-item">

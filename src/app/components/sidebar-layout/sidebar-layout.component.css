@@ -40,6 +40,11 @@
 
   @media (min-width: 1024px) {
     display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
   }
 }
 
@@ -297,12 +302,38 @@
   padding-top: 1rem;
 }
 
+/* Sidebar Brand (discreet) */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem 0.25rem;
+  color: var(--sidebar-text);
+  opacity: 0.55;
+  user-select: none;
+}
+
+.sidebar-brand-icon {
+  font-size: 1rem;
+}
+
+.sidebar-brand-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 /* Main Content */
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-width: 0;
+
+  @media (min-width: 1024px) {
+    margin-left: 17rem;
+  }
 }
 
 /* Mobile Header */
