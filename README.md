@@ -64,4 +64,5 @@ For more information on using the Angular CLI, including detailed command refere
 ng build --output-path=dist --base-href="/business-management-front/"
 ## Despliegue con dominio
 ng build --output-path=dist --base-href="/"
+
 ngh --dir=dist/browser
